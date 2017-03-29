@@ -19,20 +19,31 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package pw.stamina.plugin.relations;
+package pw.stamina.plugin.relations.result;
 
-import pw.stamina.minecraftapi.entity.Entity;
-import pw.stamina.plugin.relations.resolvers.RelationResolver;
+import pw.stamina.plugin.relations.Relation;
 
-import java.util.List;
+import java.util.Objects;
 
-@FunctionalInterface
-public interface RelationSelectorService {
+final class SuccessfulResolutionCallback implements ResolutionCallback {
+    private final Relation result;
 
-    Relation select(List<RelationResolver> externalResolvers,
-                    List<RelationResolver> defaultResolvers,
-                    Entity entity,
-                    ResolutionContext context);
+    private SuccessfulResolutionCallback(Relation result) {
+        this.result = result;
+    }
 
-    default void notifyResolverChange(RelationResolver resolver) {}
+    @Override
+    public Relation getResult() {
+        return this.result;
+    }
+
+    @Override
+    public ResolutionCallbackType getType() {
+        return ResolutionCallbackType.SUCCESSFUL;
+    }
+
+    static ResolutionCallback with(Relation relation) {
+        Objects.requireNonNull(relation, "relation");
+        return new SuccessfulResolutionCallback(relation);
+    }
 }

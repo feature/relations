@@ -19,36 +19,32 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package pw.stamina.plugin.relations.resolvers;
+package pw.stamina.plugin.relations.result;
 
 import pw.stamina.minecraftapi.entity.Entity;
 import pw.stamina.plugin.relations.Relation;
-import pw.stamina.plugin.relations.ResolutionContext;
-import pw.stamina.plugin.relations.result.ResolutionCallback;
 
-public interface RelationResolver extends Comparable<RelationResolver> {
+public interface ResolutionCallback {
 
-    /**
-     *
-     * @param entity the entity resolving the relation to
-     * @param context the resolution context
-     * @return the resolved {@link Relation}, or <tt>null</tt>
-     * if none was resolved.
-     */
-    ResolutionCallback resolveRelation(Entity entity,
-                                       ResolutionContext context);
+    default Relation getResult() {
+        throw new UnsupportedOperationException();
+    }
 
-    /**
-     * Indicates if this resolver should try to resolve a relation
-     * of the specified <tt>entityType</tt>.
-     *
-     * @param entityType the entity type to check
-     * @return <tt>true</tt> if this resolver should try to resolve
-     * a relation, otherwise returns <tt>false</tt>
-     */
-    boolean canResolve(Class<? extends Entity> entityType);
+    default Entity getNestedResolveTarget() {
+        throw new UnsupportedOperationException();
+    }
 
-    default Priority getPriority() {
-        return Priority.NORMAL;
+    ResolutionCallbackType getType();
+
+    static ResolutionCallback success(Relation relation) {
+        return SuccessfulResolutionCallback.with(relation);
+    }
+
+    static ResolutionCallback failed() {
+        return FailedResolutionCallback.INSTANCE;
+    }
+
+    static ResolutionCallback nestedResolve(Entity entity) {
+        return NestedResolveResolutionCallback.of(entity);
     }
 }

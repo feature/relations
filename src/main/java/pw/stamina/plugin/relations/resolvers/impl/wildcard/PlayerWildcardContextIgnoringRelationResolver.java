@@ -24,14 +24,16 @@ package pw.stamina.plugin.relations.resolvers.impl.wildcard;
 import pw.stamina.minecraftapi.entity.Entity;
 import pw.stamina.minecraftapi.entity.living.Player;
 import pw.stamina.plugin.relations.Relation;
-import pw.stamina.plugin.relations.resolvers.ContextIgnoringRelationResolver;
+import pw.stamina.plugin.relations.result.ResolutionCallback;
+
+import static pw.stamina.plugin.relations.result.ResolutionCallback.success;
 
 public final class PlayerWildcardContextIgnoringRelationResolver
-        extends ContextIgnoringRelationResolver {
+        extends WildcardContextIgnoringRelationResolver {
 
     @Override
-    protected Relation resolveRelation(Entity entity) {
-        return Relation.PLAYER;
+    protected ResolutionCallback resolveRelation(Entity entity) {
+        return success(Relation.PLAYER);
     }
 
     @Override

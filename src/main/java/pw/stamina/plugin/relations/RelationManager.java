@@ -24,12 +24,13 @@ package pw.stamina.plugin.relations;
 import pw.stamina.minecraftapi.entity.Entity;
 import pw.stamina.plugin.relations.resolvers.RelationResolver;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
- * RelationManager handles registration of external
- * {@link RelationResolver}, and as an entry point
- * to find {@link Relation}s to {@link Entity} entities.
+ * RelationManager handles registration of {@link RelationResolver
+ * resolvers}, and acts as an entry point to find {@link Relation
+ * relations} to {@link Entity entities}.
  */
 public interface RelationManager {
 
@@ -58,10 +59,7 @@ public interface RelationManager {
     Relation findRenderRelation(Entity entity);
 
     /**
-     * Registers an external {@link RelationResolver}
-     * to be used for finding {@link Relation}s. This resolver have
-     * a higher priority that the {@link RelationResolver}s returned
-     * by the {@link #getDefaultRelationResolvers()} method.
+     * Registers an a resolver to the list of resolvers.
      *
      * @param resolver the resolver to register
      * @return <tt>true</tt> if the resolver was not already registered,
@@ -71,7 +69,7 @@ public interface RelationManager {
     boolean registerResolver(RelationResolver resolver);
 
     /**
-     * Unregisters a resolver from the list of external resolvers.
+     * Unregisters a resolver from the list of resolvers.
      *
      * @param resolver the resolver to unregister
      * @return <tt>true</tt> if the resolver was registered, and
@@ -80,23 +78,16 @@ public interface RelationManager {
     boolean unregisterResolver(RelationResolver resolver);
 
     /**
-     * Finds an unmodifiable {@link List} of external resolvers.
+     * Finds an unmodifiable {@link Collection} of resolvers.
      *
-     * @return an unmodifiable {@link List} of external resolvers
+     * @return an unmodifiable {@link Collection} of resolvers
      */
-    List<RelationResolver> findExternalRelationResolvers();
+    List<RelationResolver> findResolvers();
 
-    /**
-     * Returns an unmodifiable {@link List} of the default {@link
-     * RelationResolver}s registered when this manager was created.
-     *
-     * @return an unmodifiable {@link List} of the default resolvers
-     * registered to this manager.
-     */
-    List<RelationResolver> getDefaultRelationResolvers();
+    //TODO: Javadoc
+    boolean registerProcessor(ResolvedRelationProcessor processor);
 
-    /**
-     * Clears the manager of all external resolvers.
-     */
-    void clearResolvers();
+    boolean unregisterProcessor(ResolvedRelationProcessor processor);
+
+    List<ResolvedRelationProcessor> findProcessors();
 }

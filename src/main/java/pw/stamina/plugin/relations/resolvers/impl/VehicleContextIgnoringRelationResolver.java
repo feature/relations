@@ -29,8 +29,12 @@ import pw.stamina.minecraftapi.entity.item.Minecart;
 import pw.stamina.minecraftapi.entity.living.Player;
 import pw.stamina.plugin.relations.Relation;
 import pw.stamina.plugin.relations.resolvers.ContextIgnoringRelationResolver;
+import pw.stamina.plugin.relations.result.ResolutionCallback;
 
-//TODO: Unit test
+import static pw.stamina.plugin.relations.result.ResolutionCallback.failed;
+import static pw.stamina.plugin.relations.result.ResolutionCallback.nestedResolve;
+import static pw.stamina.plugin.relations.result.ResolutionCallback.success;
+
 public final class VehicleContextIgnoringRelationResolver
         extends ContextIgnoringRelationResolver {
     private final Provider<Player> playerProvider;
@@ -41,14 +45,19 @@ public final class VehicleContextIgnoringRelationResolver
     }
 
     @Override
-    protected Relation resolveRelation(Entity entity) {
+    protected ResolutionCallback resolveRelation(Entity entity) {
         Entity rider = entity.getRider();
+
+        if (rider == null) {
+            return failed();
+        }
+
         Player player = this.playerProvider.get();
 
         if (rider == player) {
-            return Relation.IGNORED;
+            return success(Relation.IGNORED);
         } else {
-            return Relation.VEHICLE;
+            return nestedResolve(rider);
         }
     }
 

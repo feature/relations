@@ -21,14 +21,20 @@
 
 package pw.stamina.plugin.relations.resolvers;
 
+import org.junit.Ignore;
 import org.junit.Test;
+import pw.stamina.minecraftapi.entity.animal.Horse;
+import pw.stamina.minecraftapi.entity.animal.Tamable;
 import pw.stamina.minecraftapi.entity.animal.Wolf;
 import pw.stamina.minecraftapi.entity.living.Golem;
 import pw.stamina.minecraftapi.entity.living.IronGolem;
+import pw.stamina.minecraftapi.entity.living.Player;
+import pw.stamina.minecraftapi.entity.monster.Monster;
+import pw.stamina.minecraftapi.entity.monster.ZombiePigman;
 import pw.stamina.plugin.relations.Relation;
 import pw.stamina.plugin.relations.resolvers.impl.GolemContextIgnoringRelationResolver;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -36,19 +42,52 @@ public final class GolemContextIgnoringRelationResolverTest
         extends AbstractRelationResolverTest {
 
     @Test
-    public void testResolveRelation() {
-        RelationResolver resolver = new GolemContextIgnoringRelationResolver();
-
-        Wolf wolf = mock(Wolf.class);
+    public void resolveRelationGolemTest() {
         Golem golem = mock(Golem.class);
-        IronGolem ironGolem = mock(IronGolem.class);
 
+        this.testResolution(golem, Relation.PASSIVE);
+    }
+
+    @Test
+    public void resolveRelationIronGolemTest() {
+        IronGolem ironGolem = mock(IronGolem.class);
+        this.testResolution(ironGolem, Relation.NEUTRAL);
+    }
+
+    @Test
+    public void resolveRelationPlayerCreatedIronGolemTest() {
         IronGolem playerCreatedIronGolem = mock(IronGolem.class);
         when(playerCreatedIronGolem.isPlayerCreated()).thenReturn(true);
 
-        assertEquals(resolver.resolveRelation(wolf, null), null);
-        assertEquals(resolver.resolveRelation(golem, null), Relation.PASSIVE);
-        assertEquals(resolver.resolveRelation(ironGolem, null), Relation.NEUTRAL);
-        assertEquals(resolver.resolveRelation(playerCreatedIronGolem, null), Relation.PASSIVE);
+        this.testResolution(playerCreatedIronGolem, Relation.PASSIVE);
+    }
+
+    @Test(expected = ClassCastException.class)
+    public void resolveRelationFailTest() {
+        Wolf wolf = mock(Wolf.class);
+
+        this.resolver.resolveRelation(wolf, null);
+    }
+
+    @Test
+    public void canResolveTrueTest() {
+        assertTrue(this.resolver.canResolve(Golem.class));
+        assertTrue(this.resolver.canResolve(IronGolem.class));
+    }
+
+    @Test
+    public void canResolveFalseTest() {
+        assertFalse(this.resolver.canResolve(Tamable.class));
+        assertFalse(this.resolver.canResolve(Wolf.class));
+        assertFalse(this.resolver.canResolve(Horse.class));
+        assertFalse(this.resolver.canResolve(Player.class));
+        assertFalse(this.resolver.canResolve(Monster.class));
+        assertFalse(this.resolver.canResolve(ZombiePigman.class));
+    }
+
+    @Ignore
+    @Override
+    protected RelationResolver supplyResolver() {
+        return new GolemContextIgnoringRelationResolver();
     }
 }

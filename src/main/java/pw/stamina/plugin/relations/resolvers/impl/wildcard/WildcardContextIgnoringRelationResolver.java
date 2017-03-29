@@ -19,28 +19,16 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package pw.stamina.plugin.relations;
+package pw.stamina.plugin.relations.resolvers.impl.wildcard;
 
-import pw.stamina.minecraftapi.entity.Entity;
-import pw.stamina.plugin.relations.resolvers.RelationResolver;
+import pw.stamina.plugin.relations.resolvers.ContextIgnoringRelationResolver;
+import pw.stamina.plugin.relations.resolvers.Priority;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Stream;
-
-public final class SimpleRelationSelectorService implements RelationSelectorService {
+public abstract class WildcardContextIgnoringRelationResolver
+        extends ContextIgnoringRelationResolver {
 
     @Override
-    public Relation select(List<RelationResolver> externalResolvers,
-                           List<RelationResolver> defaultResolvers,
-                           Entity entity,
-                           ResolutionContext context) {
-
-        return Stream.concat(externalResolvers.stream(), defaultResolvers.stream())
-                .map(resolver -> resolver
-                        .resolveRelation(entity, context))
-                .filter(Objects::nonNull)
-                .findFirst()
-                .orElse(Relation.UNRECOGNIZED);
+    public final Priority getPriority() {
+        return Priority.LAST;
     }
 }

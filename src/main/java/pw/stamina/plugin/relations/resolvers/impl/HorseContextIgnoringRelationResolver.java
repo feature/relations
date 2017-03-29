@@ -28,6 +28,10 @@ import pw.stamina.minecraftapi.entity.animal.Horse;
 import pw.stamina.minecraftapi.entity.living.Player;
 import pw.stamina.plugin.relations.Relation;
 import pw.stamina.plugin.relations.resolvers.ContextIgnoringRelationResolver;
+import pw.stamina.plugin.relations.result.ResolutionCallback;
+
+import static pw.stamina.plugin.relations.result.ResolutionCallback.nestedResolve;
+import static pw.stamina.plugin.relations.result.ResolutionCallback.success;
 
 public final class HorseContextIgnoringRelationResolver
         extends ContextIgnoringRelationResolver {
@@ -39,18 +43,18 @@ public final class HorseContextIgnoringRelationResolver
     }
 
     @Override
-    protected Relation resolveRelation(Entity entity) {
+    protected ResolutionCallback resolveRelation(Entity entity) {
         Entity rider = entity.getRider();
 
         if (rider == null) {
-            return Relation.PASSIVE;
+            return success(Relation.PASSIVE);
         }
 
         Player player = this.playerProvider.get();
         if (rider == player) {
-            return Relation.IGNORED;
+            return success(Relation.IGNORED);
         } else {
-            return Relation.NEUTRAL;
+            return nestedResolve(rider);
         }
     }
 

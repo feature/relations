@@ -43,8 +43,7 @@ public final class EndermanContextIgnoringRelationResolverTest
     public void resolveRelationNeutralTest() {
         Enderman enderman = mock(Enderman.class);
 
-        assertEquals(this.resolver.resolveRelation(enderman, null),
-                Relation.NEUTRAL);
+        this.testResolution(enderman, Relation.NEUTRAL);
     }
 
     @Test
@@ -52,8 +51,7 @@ public final class EndermanContextIgnoringRelationResolverTest
         Enderman screamingEnderman = mock(Enderman.class);
         when(screamingEnderman.isScreaming()).thenReturn(true);
 
-        assertEquals(this.resolver.resolveRelation(screamingEnderman, null),
-                Relation.HOSTILE);
+        this.testResolution(screamingEnderman, Relation.HOSTILE);
     }
 
     @Test(expected = ClassCastException.class)
@@ -64,12 +62,12 @@ public final class EndermanContextIgnoringRelationResolverTest
     }
 
     @Test
-    public void caResolveTrueTest() {
+    public void canResolveTrueTest() {
         assertTrue(this.resolver.canResolve(Enderman.class));
     }
 
     @Test
-    public void caResolveFalseTest() {
+    public void canResolveFalseTest() {
         assertFalse(this.resolver.canResolve(Tamable.class));
         assertFalse(this.resolver.canResolve(Wolf.class));
         assertFalse(this.resolver.canResolve(Horse.class));

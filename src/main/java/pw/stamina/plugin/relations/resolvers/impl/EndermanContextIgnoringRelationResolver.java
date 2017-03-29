@@ -25,16 +25,20 @@ import pw.stamina.minecraftapi.entity.Entity;
 import pw.stamina.minecraftapi.entity.monster.Enderman;
 import pw.stamina.plugin.relations.Relation;
 import pw.stamina.plugin.relations.resolvers.ContextIgnoringRelationResolver;
+import pw.stamina.plugin.relations.result.ResolutionCallback;
+
+import static pw.stamina.plugin.relations.result.ResolutionCallback.success;
 
 public final class EndermanContextIgnoringRelationResolver
         extends ContextIgnoringRelationResolver {
 
     @Override
-    protected Relation resolveRelation(Entity entity) {
+    protected ResolutionCallback resolveRelation(Entity entity) {
         Enderman enderman = (Enderman) entity;
-        return enderman.isScreaming()
+
+        return success(enderman.isScreaming()
                 ? Relation.HOSTILE
-                : Relation.NEUTRAL;
+                : Relation.NEUTRAL);
     }
 
     @Override

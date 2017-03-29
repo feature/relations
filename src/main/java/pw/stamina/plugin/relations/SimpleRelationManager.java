@@ -25,28 +25,30 @@ import com.google.inject.Inject;
 import pw.stamina.minecraftapi.entity.Entity;
 import pw.stamina.plugin.relations.resolvers.DefaultResolvers;
 import pw.stamina.plugin.relations.resolvers.RelationResolver;
+import pw.stamina.plugin.relations.select.RelationSelectorService;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
-public class SimpleRelationManager implements RelationManager {
-    private final List<RelationResolver> externalResolvers;
-    private final List<RelationResolver> defaultResolvers;
+public final class SimpleRelationManager implements RelationManager {
+    private final List<RelationResolver> resolvers;
+    private final List<ResolvedRelationProcessor> processors;
+
     private final RelationSelectorService selectorService;
 
     @Inject
     public SimpleRelationManager(
             @DefaultResolvers
-                    List<RelationResolver> defaultResolvers,
+                    Set<RelationResolver> defaultResolvers,
             RelationSelectorService selectorService) {
         Objects.requireNonNull(defaultResolvers, "defaultResolvers");
         Objects.requireNonNull(selectorService, "selectorService");
 
-        this.externalResolvers = new ArrayList<>();
-        this.defaultResolvers = new ArrayList<>(defaultResolvers);
+        this.resolvers = new ArrayList<>();
+        this.resolvers.addAll(defaultResolvers);
+        Collections.sort(this.resolvers);
+
         this.selectorService = selectorService;
+        this.processors = new ArrayList<>();
     }
 
     @Override
@@ -62,8 +64,8 @@ public class SimpleRelationManager implements RelationManager {
     private Relation findRelation(Entity entity,
                                   ResolutionContext context) {
         return this.selectorService.select(
-                this.findExternalRelationResolvers(),
-                this.getDefaultRelationResolvers(),
+                this.findResolvers(),
+                this.findProcessors(),
                 entity, context);
     }
 
@@ -71,8 +73,9 @@ public class SimpleRelationManager implements RelationManager {
     public boolean registerResolver(RelationResolver resolver) {
         Objects.requireNonNull(resolver, "resolver");
 
-        if (!this.externalResolvers.contains(resolver)
-                && this.externalResolvers.add(resolver)) {
+        if (!this.resolvers.contains(resolver)
+                && this.resolvers.add(resolver)) {
+            Collections.sort(this.resolvers);
             this.selectorService.notifyResolverChange(resolver);
             return true;
         } else {
@@ -84,7 +87,7 @@ public class SimpleRelationManager implements RelationManager {
     public boolean unregisterResolver(RelationResolver resolver) {
         Objects.requireNonNull(resolver, "resolver");
 
-        if (this.externalResolvers.remove(resolver)) {
+        if (this.resolvers.remove(resolver)) {
             this.selectorService.notifyResolverChange(resolver);
             return true;
         } else {
@@ -93,22 +96,23 @@ public class SimpleRelationManager implements RelationManager {
     }
 
     @Override
-    public List<RelationResolver> findExternalRelationResolvers() {
-        return (this.externalResolvers.isEmpty())
-                ? Collections.emptyList()
-                : Collections.unmodifiableList(this.externalResolvers);
+    public List<RelationResolver> findResolvers() {
+        return Collections.unmodifiableList(this.resolvers);
     }
 
     @Override
-    public List<RelationResolver> getDefaultRelationResolvers() {
-        return Collections.unmodifiableList(this.defaultResolvers);
+    public boolean registerProcessor(ResolvedRelationProcessor processor) {
+        return !this.processors.contains(processor)
+                && this.processors.add(processor);
     }
 
     @Override
-    public void clearResolvers() {
-        this.externalResolvers.forEach(
-                this.selectorService::notifyResolverChange);
+    public boolean unregisterProcessor(ResolvedRelationProcessor processor) {
+        return this.processors.remove(processor);
+    }
 
-        this.externalResolvers.clear();
+    @Override
+    public List<ResolvedRelationProcessor> findProcessors() {
+        return Collections.unmodifiableList(this.processors);
     }
 }

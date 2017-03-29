@@ -21,22 +21,11 @@
 
 package pw.stamina.plugin.relations;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import pw.stamina.plugin.relations.resolvers.*;
+import pw.stamina.minecraftapi.entity.Entity;
 
-@RunWith(Suite.class)
-@Suite.SuiteClasses({
-        EndermanContextIgnoringRelationResolverTest.class,
-        GolemContextIgnoringRelationResolverTest.class,
-        HorseRelationResolverTest.class,
-        TamableContextIgnoringRelationResolverTest.class,
-        ZombiePigmanContextIgnoringRelationResolverTest.class,
+public interface ResolvedRelationProcessor {
 
-        AnimalWildcardContextIgnoringRelationResolverTest.class,
-        MonsterWildcardContextIgnoringRelationResolverTest.class,
-        PlayerWildcardContextIgnoringRelationResolverTest.class
-})
-public class RelationResolverSuite {
-    //TODO: Fix all tests...
+    Relation process(Relation original,
+                     Entity entity,
+                     ResolutionContext context);
 }

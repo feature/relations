@@ -24,7 +24,6 @@ package pw.stamina.plugin.relations;
 import com.google.auto.service.AutoService;
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
-import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.inject.multibindings.Multibinder;
 import pw.stamina.plugin.relations.resolvers.DefaultResolvers;
@@ -33,8 +32,10 @@ import pw.stamina.plugin.relations.resolvers.impl.*;
 import pw.stamina.plugin.relations.resolvers.impl.wildcard.AnimalWildcardContextIgnoringRelationResolver;
 import pw.stamina.plugin.relations.resolvers.impl.wildcard.MonsterWildcardContextIgnoringRelationResolver;
 import pw.stamina.plugin.relations.resolvers.impl.wildcard.PlayerWildcardContextIgnoringRelationResolver;
+import pw.stamina.plugin.relations.select.CachingRelationSelectorService;
+import pw.stamina.plugin.relations.select.RelationSelectorService;
 
-import java.util.*;
+import java.util.Arrays;
 
 @AutoService(Module.class)
 public final class RelationsModule extends AbstractModule {
@@ -65,18 +66,9 @@ public final class RelationsModule extends AbstractModule {
                 VehicleContextIgnoringRelationResolver.class,
                 ZombiePigmanContextIgnoringRelationResolver.class,
 
-                //Wildcard resolvers
                 AnimalWildcardContextIgnoringRelationResolver.class,
                 MonsterWildcardContextIgnoringRelationResolver.class,
                 PlayerWildcardContextIgnoringRelationResolver.class
         ).forEach(resolver -> defaultResolversBinder.addBinding().to(resolver));
-    }
-
-    @Provides
-    @DefaultResolvers
-    List<RelationResolver> provideNormalizedDefaultResolverAsList(
-            @DefaultResolvers
-            Set<RelationResolver> defaultResolvers) {
-        return Collections.unmodifiableList(new ArrayList<>(defaultResolvers));
     }
 }

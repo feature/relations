@@ -19,36 +19,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package pw.stamina.plugin.relations.resolvers;
+package pw.stamina.plugin.relations;
 
-import pw.stamina.minecraftapi.entity.Entity;
-import pw.stamina.plugin.relations.Relation;
-import pw.stamina.plugin.relations.ResolutionContext;
-import pw.stamina.plugin.relations.result.ResolutionCallback;
+public final class ResolveRequest {
 
-public interface RelationResolver extends Comparable<RelationResolver> {
-
-    /**
-     *
-     * @param entity the entity resolving the relation to
-     * @param context the resolution context
-     * @return the resolved {@link Relation}, or <tt>null</tt>
-     * if none was resolved.
-     */
-    ResolutionCallback resolveRelation(Entity entity,
-                                       ResolutionContext context);
-
-    /**
-     * Indicates if this resolver should try to resolve a relation
-     * of the specified <tt>entityType</tt>.
-     *
-     * @param entityType the entity type to check
-     * @return <tt>true</tt> if this resolver should try to resolve
-     * a relation, otherwise returns <tt>false</tt>
-     */
-    boolean canResolve(Class<? extends Entity> entityType);
-
-    default Priority getPriority() {
-        return Priority.NORMAL;
-    }
 }

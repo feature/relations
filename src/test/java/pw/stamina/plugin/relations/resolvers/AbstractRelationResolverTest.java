@@ -23,14 +23,23 @@ package pw.stamina.plugin.relations.resolvers;
 
 import org.junit.Before;
 import org.junit.Ignore;
+import pw.stamina.minecraftapi.entity.Entity;
+import pw.stamina.plugin.relations.Relation;
+
+import static org.junit.Assert.assertEquals;
 
 @Ignore
 abstract class AbstractRelationResolverTest {
-    RelationResolver resolver;
+    protected RelationResolver resolver;
 
     @Before
-    public final void setupResolver() {
+    public void setupResolver() {
         this.resolver = this.supplyResolver();
+    }
+
+    protected final void testResolution(Entity entity, Relation expectedRelation) {
+        assertEquals(this.resolver.resolveRelation(
+                entity, null).getResult(), expectedRelation);
     }
 
     protected abstract RelationResolver supplyResolver();

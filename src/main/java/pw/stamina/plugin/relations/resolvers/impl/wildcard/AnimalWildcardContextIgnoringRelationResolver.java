@@ -25,14 +25,16 @@ import pw.stamina.minecraftapi.entity.Entity;
 import pw.stamina.minecraftapi.entity.animal.Animal;
 import pw.stamina.minecraftapi.entity.monster.Monster;
 import pw.stamina.plugin.relations.Relation;
-import pw.stamina.plugin.relations.resolvers.ContextIgnoringRelationResolver;
+import pw.stamina.plugin.relations.result.ResolutionCallback;
+
+import static pw.stamina.plugin.relations.result.ResolutionCallback.success;
 
 public final class AnimalWildcardContextIgnoringRelationResolver
-        extends ContextIgnoringRelationResolver {
+        extends WildcardContextIgnoringRelationResolver {
 
     @Override
-    protected Relation resolveRelation(Entity entity) {
-        return Relation.PASSIVE;
+    protected ResolutionCallback resolveRelation(Entity entity) {
+        return success(Relation.PASSIVE);
     }
 
     @Override

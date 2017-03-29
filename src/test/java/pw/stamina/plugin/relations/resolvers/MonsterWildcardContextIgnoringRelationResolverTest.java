@@ -21,32 +21,51 @@
 
 package pw.stamina.plugin.relations.resolvers;
 
+import org.junit.Ignore;
 import org.junit.Test;
+import pw.stamina.minecraftapi.entity.animal.Animal;
+import pw.stamina.minecraftapi.entity.animal.Horse;
+import pw.stamina.minecraftapi.entity.animal.Tamable;
 import pw.stamina.minecraftapi.entity.animal.Wolf;
-import pw.stamina.minecraftapi.entity.living.Golem;
-import pw.stamina.minecraftapi.entity.monster.Enderman;
+import pw.stamina.minecraftapi.entity.living.Player;
+import pw.stamina.minecraftapi.entity.monster.Monster;
 import pw.stamina.minecraftapi.entity.monster.ZombiePigman;
 import pw.stamina.plugin.relations.Relation;
 import pw.stamina.plugin.relations.resolvers.impl.wildcard.MonsterWildcardContextIgnoringRelationResolver;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
-public final class MonsterWildcardContextIgnoringRelationResolverTest {
+public final class MonsterWildcardContextIgnoringRelationResolverTest
+        extends AbstractRelationResolverTest {
 
     @Test
-    public void testResolveRelation() {
-        RelationResolver resolver = new MonsterWildcardContextIgnoringRelationResolver();
-
-        Wolf wolf = mock(Wolf.class);
-        Golem golem = mock(Golem.class);
-        Enderman enderman = mock(Enderman.class);
+    public void resolveRelationSuccessTest() {
+        Monster monster = mock(Monster.class);
         ZombiePigman zombiePigman = mock(ZombiePigman.class);
 
-        assertEquals(resolver.resolveRelation(wolf, null), null);
-        assertEquals(resolver.resolveRelation(golem, null), null);
-        assertEquals(resolver.resolveRelation(enderman, null), Relation.HOSTILE);
-        assertEquals(resolver.resolveRelation(zombiePigman, null), Relation.HOSTILE);
+        this.testResolution(monster, Relation.HOSTILE);
+        this.testResolution(zombiePigman, Relation.HOSTILE);
     }
 
+    @Test
+    public void canResolveTrueTest() {
+        assertTrue(this.resolver.canResolve(Monster.class));
+        assertTrue(this.resolver.canResolve(ZombiePigman.class));
+    }
+
+    @Test
+    public void canResolveFalseTest() {
+        assertFalse(this.resolver.canResolve(Player.class));
+        assertFalse(this.resolver.canResolve(Animal.class));
+        assertFalse(this.resolver.canResolve(Tamable.class));
+        assertFalse(this.resolver.canResolve(Wolf.class));
+        assertFalse(this.resolver.canResolve(Horse.class));
+    }
+
+    @Ignore
+    @Override
+    protected RelationResolver supplyResolver() {
+        return new MonsterWildcardContextIgnoringRelationResolver();
+    }
 }

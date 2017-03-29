@@ -22,8 +22,8 @@
 package pw.stamina.plugin.relations.resolvers;
 
 import pw.stamina.minecraftapi.entity.Entity;
-import pw.stamina.plugin.relations.Relation;
 import pw.stamina.plugin.relations.ResolutionContext;
+import pw.stamina.plugin.relations.result.ResolutionCallback;
 
 /**
  * Abstract {@link ResolutionContext context} ignoring
@@ -32,13 +32,13 @@ import pw.stamina.plugin.relations.ResolutionContext;
  * regardless of context.
  */
 public abstract class ContextIgnoringRelationResolver
-        implements RelationResolver {
+        extends AbstractRelationResolver {
 
-    protected abstract Relation resolveRelation(Entity entity);
+    protected abstract ResolutionCallback resolveRelation(Entity entity);
 
     @Override
-    public final Relation resolveRelation(Entity entity,
-                                          ResolutionContext context) {
+    public final ResolutionCallback resolveRelation(Entity entity,
+                                                    ResolutionContext context) {
         return this.resolveRelation(entity);
     }
 }

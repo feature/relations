@@ -25,17 +25,20 @@ import pw.stamina.minecraftapi.entity.Entity;
 import pw.stamina.minecraftapi.entity.monster.ZombiePigman;
 import pw.stamina.plugin.relations.Relation;
 import pw.stamina.plugin.relations.resolvers.ContextIgnoringRelationResolver;
+import pw.stamina.plugin.relations.result.ResolutionCallback;
+
+import static pw.stamina.plugin.relations.result.ResolutionCallback.success;
 
 public final class ZombiePigmanContextIgnoringRelationResolver
         extends ContextIgnoringRelationResolver {
 
     @Override
-    protected Relation resolveRelation(Entity entity) {
+    protected ResolutionCallback resolveRelation(Entity entity) {
         ZombiePigman pigman = (ZombiePigman) entity;
 
-        return pigman.isAngry()
+        return success(pigman.isAngry()
                 ? Relation.HOSTILE
-                : Relation.NEUTRAL;
+                : Relation.NEUTRAL);
     }
 
     @Override

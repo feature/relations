@@ -26,23 +26,26 @@ import pw.stamina.minecraftapi.entity.living.Golem;
 import pw.stamina.minecraftapi.entity.living.IronGolem;
 import pw.stamina.plugin.relations.Relation;
 import pw.stamina.plugin.relations.resolvers.ContextIgnoringRelationResolver;
+import pw.stamina.plugin.relations.result.ResolutionCallback;
+
+import static pw.stamina.plugin.relations.result.ResolutionCallback.success;
 
 public final class GolemContextIgnoringRelationResolver
         extends ContextIgnoringRelationResolver {
 
     @Override
-    protected Relation resolveRelation(Entity entity) {
+    protected ResolutionCallback resolveRelation(Entity entity) {
         Golem golem = (Golem) entity;
 
         if (golem instanceof IronGolem) {
             IronGolem ironGolem = (IronGolem) golem;
 
             if (!ironGolem.isPlayerCreated()) {
-                return Relation.NEUTRAL;
+                return success(Relation.NEUTRAL);
             }
         }
 
-        return Relation.PASSIVE;
+        return success(Relation.PASSIVE);
     }
 
     @Override

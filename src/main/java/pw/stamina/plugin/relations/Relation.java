@@ -27,7 +27,7 @@ import java.util.Optional;
 
 /**
  * An enum of entity relations. A relation
- * describes how supported systems should
+ * indicates how supported systems should
  * treat entities.
  */
 public enum Relation {
@@ -57,8 +57,6 @@ public enum Relation {
      * player, without any other specific relation.
      */
     PLAYER,
-    //TODO Javadoc
-    VEHICLE,
     /**
      * Indicates that the system should ignore
      * the entity entirely.
@@ -70,8 +68,19 @@ public enum Relation {
      */
     UNRECOGNIZED;
 
-    //TODO: Javadoc
-    public static Optional<Relation> from(String input) {
+    /**
+     * Retrieves a {@link Relation} case insensitive
+     * by its {@link #name name}. The result in
+     * wrapped in an {@link Optional} to clearly
+     * indicate if no relation was found.
+     *
+     * @param input {@link #name} of the {@link Relation}
+     *                           to retrieve
+     * @return the result wrapped in an {@link Optional}
+     * @throws NullPointerException if <tt>input</tt> is null
+     */
+    public static Optional<Relation> from(String input)
+            throws NullPointerException {
         Objects.requireNonNull(input, "input");
 
         return Arrays.stream(Relation.values())

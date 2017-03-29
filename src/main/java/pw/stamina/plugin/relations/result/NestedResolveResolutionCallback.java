@@ -19,36 +19,32 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package pw.stamina.plugin.relations.resolvers;
+package pw.stamina.plugin.relations.result;
 
 import pw.stamina.minecraftapi.entity.Entity;
-import pw.stamina.plugin.relations.Relation;
-import pw.stamina.plugin.relations.ResolutionContext;
-import pw.stamina.plugin.relations.result.ResolutionCallback;
 
-public interface RelationResolver extends Comparable<RelationResolver> {
+import java.util.Objects;
 
-    /**
-     *
-     * @param entity the entity resolving the relation to
-     * @param context the resolution context
-     * @return the resolved {@link Relation}, or <tt>null</tt>
-     * if none was resolved.
-     */
-    ResolutionCallback resolveRelation(Entity entity,
-                                       ResolutionContext context);
+final class NestedResolveResolutionCallback
+        implements ResolutionCallback {
+    private final Entity nestedResolveTarget;
 
-    /**
-     * Indicates if this resolver should try to resolve a relation
-     * of the specified <tt>entityType</tt>.
-     *
-     * @param entityType the entity type to check
-     * @return <tt>true</tt> if this resolver should try to resolve
-     * a relation, otherwise returns <tt>false</tt>
-     */
-    boolean canResolve(Class<? extends Entity> entityType);
+    private NestedResolveResolutionCallback(Entity nestedResolveTarget) {
+        this.nestedResolveTarget = nestedResolveTarget;
+    }
 
-    default Priority getPriority() {
-        return Priority.NORMAL;
+    @Override
+    public Entity getNestedResolveTarget() {
+        return this.nestedResolveTarget;
+    }
+
+    @Override
+    public ResolutionCallbackType getType() {
+        return ResolutionCallbackType.NESTED_RESOLVE;
+    }
+
+    static ResolutionCallback of(Entity nestedResolveTarget) {
+        Objects.requireNonNull(nestedResolveTarget, "nestedResolveTarget");
+        return new NestedResolveResolutionCallback(nestedResolveTarget);
     }
 }
