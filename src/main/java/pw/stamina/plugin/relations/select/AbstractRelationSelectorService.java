@@ -28,6 +28,7 @@ import pw.stamina.plugin.relations.ResolvedRelationProcessor;
 
 import java.util.List;
 
+//TODO: Javadoc
 public abstract class AbstractRelationSelectorService
         implements RelationSelectorService {
 
@@ -37,9 +38,14 @@ public abstract class AbstractRelationSelectorService
             Entity entity,
             ResolutionContext context) {
 
+        if (processors.isEmpty()) {
+            return original;
+        }
+
         return processors.stream()
-                .map(processor -> processor.process(original, entity, context))
+                .map(processor -> processor
+                        .process(original, entity, context))
                 .findFirst()
-                .orElse(Relation.UNRECOGNIZED);
+                .orElse(original);
     }
 }

@@ -24,6 +24,7 @@ package pw.stamina.plugin.relations.resolvers.impl.wildcard;
 import pw.stamina.plugin.relations.resolvers.ContextIgnoringRelationResolver;
 import pw.stamina.plugin.relations.resolvers.Priority;
 
+//TODO: Javadoc
 public abstract class WildcardContextIgnoringRelationResolver
         extends ContextIgnoringRelationResolver {
 

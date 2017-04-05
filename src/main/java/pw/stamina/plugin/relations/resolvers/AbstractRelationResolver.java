@@ -21,6 +21,7 @@
 
 package pw.stamina.plugin.relations.resolvers;
 
+//TODO: Javadoc
 public abstract class AbstractRelationResolver implements RelationResolver {
 
     @Override

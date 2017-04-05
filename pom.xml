@@ -27,11 +27,11 @@
 
     <groupId>pw.stamina.plugin</groupId>
     <artifactId>relations</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.3.4-SNAPSHOT</version>
 
     <name>Relations</name>
     <description>
-        Relations is a Stamina compatibility library for resolving
+        Relations is a Stamina compatibility plugin for resolving
         client-to-entity relationships. This allows other plugins
         to use, and extend, an unified system which indicates how
         entities should be treated.
@@ -58,21 +58,9 @@
                 <filtering>true</filtering>
             </resource>
         </resources>
-
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-        </plugins>
     </build>
 
     <dependencies>
-        <!-- TODO Replace with StaminaSDK -->
         <dependency>
             <groupId>pw.stamina</groupId>
             <artifactId>miscere</artifactId>

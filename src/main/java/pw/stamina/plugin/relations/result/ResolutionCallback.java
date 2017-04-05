@@ -23,7 +23,14 @@ package pw.stamina.plugin.relations.result;
 
 import pw.stamina.minecraftapi.entity.Entity;
 import pw.stamina.plugin.relations.Relation;
+import pw.stamina.plugin.relations.resolvers.RelationResolver;
+import pw.stamina.plugin.relations.select.RelationSelectorService;
 
+/**
+ * This class is used for {@link RelationResolver}s to
+ * signal to the {@link RelationSelectorService} how their
+ * resolution should be handled.
+ */
 public interface ResolutionCallback {
 
     default Relation getResult() {
@@ -36,14 +43,40 @@ public interface ResolutionCallback {
 
     ResolutionCallbackType getType();
 
+    /**
+     * Returns a new successful {@link ResolutionCallback},
+     * with the specified relation as its result. The
+     * {@link #getResult()} may be on on this this
+     * {@link ResolutionCallback} instance.
+     *
+     * @param relation the resolve relation
+     * @return a new successful {@link ResolutionCallback},
+     * with the specified relation as its result
+     */
     static ResolutionCallback success(Relation relation) {
         return SuccessfulResolutionCallback.with(relation);
     }
 
+    /**
+     * Returns a {@link ResolutionCallback} indicating
+     * the resolution was successful.
+     *
+     * @return a failed {@link ResolutionCallback}
+     */
     static ResolutionCallback failed() {
         return FailedResolutionCallback.INSTANCE;
     }
 
+    /**
+     * Returns a new {@link ResolutionCallback} requested
+     * a nested relation resolve on the specified entity. The
+     * {@link #getNestedResolveTarget()} may be on on this
+     * this {@link ResolutionCallback} instance.
+     *
+     * @param entity entity requesting the nested resolve for
+     * @return a new {@link ResolutionCallback} requesting
+     * a nested relation resolve
+     */
     static ResolutionCallback nestedResolve(Entity entity) {
         return NestedResolveResolutionCallback.of(entity);
     }

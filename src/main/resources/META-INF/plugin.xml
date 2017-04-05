@@ -21,6 +21,7 @@
   -->
 
 <library>
-    <descriptor>library.json</descriptor>
-    <singleton>true</singleton>
+    <location>plugin.json</location>
+    <loader>json</loader>
+    <main>pw.stamina.plugin.relations.RelationsPlugin</main>
 </library>

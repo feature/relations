@@ -24,6 +24,7 @@
     <orderEntry type="library" name="Maven: pw.stamina.coverage:coverage-injection:0.1.0" level="project" />
     <orderEntry type="library" name="Maven: org.ow2.asm:asm-all:5.2" level="project" />
     <orderEntry type="library" name="Maven: pw.stamina.coverage:coverage-model:0.1.0" level="project" />
+    <orderEntry type="library" name="Maven: pw.stamina:occasum:0.1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.google.inject.extensions:guice-multibindings:4.1.0" level="project" />
     <orderEntry type="library" name="Maven: com.google.auto.service:auto-service:1.0-rc2" level="project" />
     <orderEntry type="library" name="Maven: com.google.auto:auto-common:0.3" level="project" />

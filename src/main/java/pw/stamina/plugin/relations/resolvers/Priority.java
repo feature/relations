@@ -21,6 +21,7 @@
 
 package pw.stamina.plugin.relations.resolvers;
 
+//TODO: Javadoc
 public enum Priority {
     FIRST,
     EARLIER,

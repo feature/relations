@@ -24,6 +24,7 @@ package pw.stamina.plugin.relations.resolvers;
 import pw.stamina.minecraftapi.entity.Entity;
 import pw.stamina.plugin.relations.ResolutionContext;
 import pw.stamina.plugin.relations.result.ResolutionCallback;
+import pw.stamina.plugin.relations.select.RelationSelectorService;
 
 /**
  * Abstract {@link ResolutionContext context} ignoring
@@ -34,8 +35,28 @@ import pw.stamina.plugin.relations.result.ResolutionCallback;
 public abstract class ContextIgnoringRelationResolver
         extends AbstractRelationResolver {
 
+    /**
+     * Tries to resolve a relation to the specified {@link
+     * Entity entity}. This method returns a {@link ResolutionCallback},
+     * this object is used to signal to the
+     * {@link RelationSelectorService} how the result of
+     * this method should be handled.
+     *
+     * @param entity the entity resolving the relation to
+     * @return a {@link ResolutionCallback} which indicates
+     * how the result of this resolver should be handled
+     */
     protected abstract ResolutionCallback resolveRelation(Entity entity);
 
+    /**
+     * Delegates to the {@link #resolveRelation(Entity)}
+     * ignoring the specified <tt>context</tt>.
+     *
+     * @param entity the entity resolving the relation to
+     * @param context ignored
+     * @return a {@link ResolutionCallback} which indicates
+     * how the result of this resolver should be handled
+     */
     @Override
     public final ResolutionCallback resolveRelation(Entity entity,
                                                     ResolutionContext context) {

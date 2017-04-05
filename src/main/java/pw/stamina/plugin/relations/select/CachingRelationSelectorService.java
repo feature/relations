@@ -26,10 +26,14 @@ import pw.stamina.plugin.relations.Relation;
 import pw.stamina.plugin.relations.ResolutionContext;
 import pw.stamina.plugin.relations.ResolvedRelationProcessor;
 import pw.stamina.plugin.relations.resolvers.RelationResolver;
+import pw.stamina.plugin.relations.result.ResolutionCallback;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+//TODO: Javadoc
 public final class CachingRelationSelectorService
         extends AbstractRelationSelectorService {
 
@@ -42,28 +46,62 @@ public final class CachingRelationSelectorService
                            Entity entity,
                            ResolutionContext context) {
 
-        Class<? extends Entity> entityType = entity.getClass();
-        List<RelationResolver> cachedResolvers = this.cachedResolvers
-                .computeIfAbsent(entityType, ignored -> resolvers.stream()
-                        .filter(resolver -> resolver.canResolve(entityType))
-                        .collect(Collectors.toList()));
+        List<RelationResolver> cachedResolvers = this.findCachedResolvers(
+                entity, resolvers);
+
+        for (RelationResolver resolver : cachedResolvers) {
+            ResolutionCallback callback = resolver
+                    .resolveRelation(entity, context);
+
+            switch (callback.getType()) {
+                case SUCCESSFUL:
+                    return this.processRelation(
+                            processors,
+                            callback.getResult(),
+                            entity,
+                            context);
+                case NESTED_RESOLVE:
+                    return this.select(
+                            resolvers,
+                            processors,
+                            callback.getNestedResolveTarget(),
+                            context);
+                case FAILED:
+                    break;
+            }
+        }
 
         return Relation.UNRECOGNIZED;
-        //return cachedResolvers.stream()
-        //        .map(resolver -> resolver
-        //                .resolveRelation(entity, context))
-        //        .filter(Objects::nonNull)
-        //        .findFirst()
-        //        .map(relation -> this.processRelation
-        //                (processors, relation, entity, context))
-        //        .orElse(Relation.UNRECOGNIZED);
     }
 
+    private List<RelationResolver> findCachedResolvers(Entity entity,
+                                                       List<RelationResolver> resolvers) {
+        Class<? extends Entity> entityType = entity.getClass();
+
+        return this.cachedResolvers
+                .computeIfAbsent(entityType, key -> resolvers.stream()
+                        .filter(resolver -> resolver.canResolve(key))
+                        .collect(Collectors.toList()));
+    }
+
+    /**
+     * Delegates the <tt>resolver</tt> to the {@link
+     * #invalidateCache(RelationResolver)} method.
+     *
+     * @param resolver the resolver changed
+     */
     @Override
     public void notifyResolverChange(RelationResolver resolver) {
         this.invalidateCache(resolver);
     }
 
+    /**
+     * Removes the cache entries by key if the key
+     * is accepted by the {@link RelationResolver#canResolve(Class)}
+     * method of the specified <tt>resolver</tt>.
+     *
+     * @param resolver resolver invalidating the cache for
+     */
     private void invalidateCache(RelationResolver resolver) {
         this.cachedResolvers.keySet()
                 .removeIf(resolver::canResolve);

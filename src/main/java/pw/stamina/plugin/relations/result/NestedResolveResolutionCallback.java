@@ -25,6 +25,7 @@ import pw.stamina.minecraftapi.entity.Entity;
 
 import java.util.Objects;
 
+//TODO: Javadoc
 final class NestedResolveResolutionCallback
         implements ResolutionCallback {
     private final Entity nestedResolveTarget;

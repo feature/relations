@@ -70,6 +70,14 @@ public final class RelationTest {
     }
 
     @Test
+    public void testEnemyFrom() {
+        assertEquals(Relation.from("enemy").get(), Relation.ENEMY);
+        assertEquals(Relation.from("eNeMy").get(), Relation.ENEMY);
+        assertEquals(Relation.from("EnEmY").get(), Relation.ENEMY);
+        assertEquals(Relation.from("ENEMY").get(), Relation.ENEMY);
+    }
+
+    @Test
     public void testIgnoredFrom() {
         assertEquals(Relation.from("ignored").get(), Relation.IGNORED);
         assertEquals(Relation.from("iGnOrEd").get(), Relation.IGNORED);

@@ -35,6 +35,7 @@ import static pw.stamina.plugin.relations.result.ResolutionCallback.failed;
 import static pw.stamina.plugin.relations.result.ResolutionCallback.nestedResolve;
 import static pw.stamina.plugin.relations.result.ResolutionCallback.success;
 
+//TODO: Javadoc
 public final class VehicleContextIgnoringRelationResolver
         extends ContextIgnoringRelationResolver {
     private final Provider<Player> playerProvider;

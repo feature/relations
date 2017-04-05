@@ -25,6 +25,7 @@ import pw.stamina.plugin.relations.Relation;
 
 import java.util.Objects;
 
+//TODO: Javadoc
 final class SuccessfulResolutionCallback implements ResolutionCallback {
     private final Relation result;
 

@@ -35,8 +35,9 @@ import pw.stamina.plugin.relations.resolvers.impl.wildcard.PlayerWildcardContext
 import pw.stamina.plugin.relations.select.CachingRelationSelectorService;
 import pw.stamina.plugin.relations.select.RelationSelectorService;
 
-import java.util.Arrays;
+import java.util.stream.Stream;
 
+//TODO: Javadoc
 @AutoService(Module.class)
 public final class RelationsModule extends AbstractModule {
 
@@ -49,16 +50,16 @@ public final class RelationsModule extends AbstractModule {
         bind(RelationSelectorService.class)
                 .to(CachingRelationSelectorService.class);
 
-        this.registerDefaultResolvers();
+        this.bindDefaultResolvers();
     }
 
-    private void registerDefaultResolvers() {
+    private void bindDefaultResolvers() {
         Multibinder<RelationResolver> defaultResolversBinder =
                 Multibinder.newSetBinder(binder(),
                         RelationResolver.class,
                         DefaultResolvers.class);
 
-        Arrays.asList(
+        Stream.of(
                 EndermanContextIgnoringRelationResolver.class,
                 GolemContextIgnoringRelationResolver.class,
                 HorseContextIgnoringRelationResolver.class,

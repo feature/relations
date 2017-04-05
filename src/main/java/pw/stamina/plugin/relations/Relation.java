@@ -58,6 +58,11 @@ public enum Relation {
      */
     PLAYER,
     /**
+     * The entity is explicitly declared by a
+     * resolver to be considered an enemy.
+     */
+    ENEMY,
+    /**
      * Indicates that the system should ignore
      * the entity entirely.
      */

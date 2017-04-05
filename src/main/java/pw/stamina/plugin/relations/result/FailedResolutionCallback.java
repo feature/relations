@@ -21,6 +21,7 @@
 
 package pw.stamina.plugin.relations.result;
 
+//TODO: Javadoc
 enum FailedResolutionCallback implements ResolutionCallback {
     INSTANCE;
 

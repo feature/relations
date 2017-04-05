@@ -29,16 +29,31 @@ import pw.stamina.plugin.relations.select.RelationSelectorService;
 
 import java.util.*;
 
-public final class SimpleRelationManager implements RelationManager {
+/**
+ * A simple implementation of the {@link RelationManager}
+ * interface. This class and its methods functions as
+ * specified in the {@link RelationManager} interface. This
+ * implementation is not thread safe.
+ */
+public final class SimpleRelationManager
+        implements RelationManager {
+
     private final List<RelationResolver> resolvers;
     private final List<ResolvedRelationProcessor> processors;
-
     private final RelationSelectorService selectorService;
 
+    /**
+     * Constructs a new <tt>SimpleRelationManager</tt>
+     * with the specified default resolvers, and the
+     * specified <tt>selectorService</tt>.
+     *
+     * @param defaultResolvers set of default resolvers
+     * @param selectorService relation selector service
+     */
     @Inject
     public SimpleRelationManager(
             @DefaultResolvers
-                    Set<RelationResolver> defaultResolvers,
+            Set<RelationResolver> defaultResolvers,
             RelationSelectorService selectorService) {
         Objects.requireNonNull(defaultResolvers, "defaultResolvers");
         Objects.requireNonNull(selectorService, "selectorService");

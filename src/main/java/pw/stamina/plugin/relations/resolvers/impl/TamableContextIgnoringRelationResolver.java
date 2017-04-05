@@ -36,6 +36,7 @@ import java.util.UUID;
 import static pw.stamina.plugin.relations.result.ResolutionCallback.nestedResolve;
 import static pw.stamina.plugin.relations.result.ResolutionCallback.success;
 
+//TODO: Javadoc
 public final class TamableContextIgnoringRelationResolver
         extends ContextIgnoringRelationResolver {
     private final Provider<Player> playerProvider;

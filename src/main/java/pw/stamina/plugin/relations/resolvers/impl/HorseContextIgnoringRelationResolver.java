@@ -33,6 +33,7 @@ import pw.stamina.plugin.relations.result.ResolutionCallback;
 import static pw.stamina.plugin.relations.result.ResolutionCallback.nestedResolve;
 import static pw.stamina.plugin.relations.result.ResolutionCallback.success;
 
+//TODO: Javadoc
 public final class HorseContextIgnoringRelationResolver
         extends ContextIgnoringRelationResolver {
     private final Provider<Player> playerProvider;

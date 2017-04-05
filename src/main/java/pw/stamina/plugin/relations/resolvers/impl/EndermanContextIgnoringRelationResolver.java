@@ -29,6 +29,7 @@ import pw.stamina.plugin.relations.result.ResolutionCallback;
 
 import static pw.stamina.plugin.relations.result.ResolutionCallback.success;
 
+//TODO: Javadoc
 public final class EndermanContextIgnoringRelationResolver
         extends ContextIgnoringRelationResolver {
 
