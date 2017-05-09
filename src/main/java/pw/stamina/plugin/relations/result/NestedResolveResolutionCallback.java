@@ -36,7 +36,7 @@ final class NestedResolveResolutionCallback
 
     @Override
     public Entity getNestedResolveTarget() {
-        return this.nestedResolveTarget;
+        return nestedResolveTarget;
     }
 
     @Override

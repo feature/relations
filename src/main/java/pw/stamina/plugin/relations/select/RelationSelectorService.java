@@ -23,11 +23,8 @@ package pw.stamina.plugin.relations.select;
 
 import pw.stamina.minecraftapi.entity.Entity;
 import pw.stamina.plugin.relations.Relation;
-import pw.stamina.plugin.relations.ResolutionContext;
-import pw.stamina.plugin.relations.ResolvedRelationProcessor;
+import pw.stamina.plugin.relations.request.CompleteResolveRequest;
 import pw.stamina.plugin.relations.resolvers.RelationResolver;
-
-import java.util.List;
 
 //TODO: Javadoc
 public interface RelationSelectorService {
@@ -46,10 +43,8 @@ public interface RelationSelectorService {
      * @return the selected relation, or <tt>null</tt>
      * in none was selected.
      */
-    Relation select(List<RelationResolver> resolvers,
-                    List<ResolvedRelationProcessor> processors,
-                    Entity entity,
-                    ResolutionContext context);
+    //TODO: update
+    Relation select(CompleteResolveRequest completeRequest);
 
     /**
      * Notifies this {@link RelationSelectorService} that a

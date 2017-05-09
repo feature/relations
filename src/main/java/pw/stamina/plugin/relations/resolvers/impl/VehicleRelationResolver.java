@@ -21,29 +21,53 @@
 
 package pw.stamina.plugin.relations.resolvers.impl;
 
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 import pw.stamina.minecraftapi.entity.Entity;
-import pw.stamina.minecraftapi.entity.monster.ZombiePigman;
+import pw.stamina.minecraftapi.entity.item.Boat;
+import pw.stamina.minecraftapi.entity.item.Minecart;
+import pw.stamina.minecraftapi.entity.living.Player;
 import pw.stamina.plugin.relations.Relation;
-import pw.stamina.plugin.relations.resolvers.ContextIgnoringRelationResolver;
+import pw.stamina.plugin.relations.request.ResolveRequest;
+import pw.stamina.plugin.relations.resolvers.AbstractRelationResolver;
 import pw.stamina.plugin.relations.result.ResolutionCallback;
 
-import static pw.stamina.plugin.relations.result.ResolutionCallback.success;
+import static pw.stamina.plugin.relations.result.ResolutionCallback.*;
 
 //TODO: Javadoc
-public final class ZombiePigmanContextIgnoringRelationResolver
-        extends ContextIgnoringRelationResolver {
+public final class VehicleRelationResolver
+        extends AbstractRelationResolver {
+    private final Provider<Player> localPlayerProvider;
+
+    @Inject
+    public VehicleRelationResolver(Provider<Player> localPlayerProvider) {
+        this.localPlayerProvider = localPlayerProvider;
+    }
 
     @Override
-    protected ResolutionCallback resolveRelation(Entity entity) {
-        ZombiePigman pigman = (ZombiePigman) entity;
+    public ResolutionCallback resolveRelation(ResolveRequest request) {
+        Entity rider = request.entity().getRider();
 
-        return success(pigman.isAngry()
-                ? Relation.HOSTILE
-                : Relation.NEUTRAL);
+        if (rider == null) {
+            return failed();
+        }
+
+        if (isRiderLocalPlayer(rider)) {
+            return success(Relation.IGNORED);
+        } else {
+            return nestedResolve(rider);
+        }
+    }
+
+    private boolean isRiderLocalPlayer(Entity rider) {
+        Player localPlayer = localPlayerProvider.get();
+
+        return rider == localPlayer;
     }
 
     @Override
     public boolean canResolve(Class<? extends Entity> entityType) {
-        return ZombiePigman.class.isAssignableFrom(entityType);
+        return Boat.class.isAssignableFrom(entityType)
+                || Minecart.class.isAssignableFrom(entityType);
     }
 }

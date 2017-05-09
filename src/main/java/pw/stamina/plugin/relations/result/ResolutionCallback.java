@@ -33,14 +33,17 @@ import pw.stamina.plugin.relations.select.RelationSelectorService;
  */
 public interface ResolutionCallback {
 
+    //TODO: Javadoc
     default Relation getResult() {
         throw new UnsupportedOperationException();
     }
 
+    //TODO: Javadoc
     default Entity getNestedResolveTarget() {
         throw new UnsupportedOperationException();
     }
 
+    //TODO: Javadoc
     ResolutionCallbackType getType();
 
     /**

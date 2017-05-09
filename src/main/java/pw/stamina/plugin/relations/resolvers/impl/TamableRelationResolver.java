@@ -28,7 +28,8 @@ import pw.stamina.minecraftapi.entity.animal.Tamable;
 import pw.stamina.minecraftapi.entity.animal.Wolf;
 import pw.stamina.minecraftapi.entity.living.Player;
 import pw.stamina.plugin.relations.Relation;
-import pw.stamina.plugin.relations.resolvers.ContextIgnoringRelationResolver;
+import pw.stamina.plugin.relations.request.ResolveRequest;
+import pw.stamina.plugin.relations.resolvers.AbstractRelationResolver;
 import pw.stamina.plugin.relations.result.ResolutionCallback;
 
 import java.util.UUID;
@@ -37,26 +38,26 @@ import static pw.stamina.plugin.relations.result.ResolutionCallback.nestedResolv
 import static pw.stamina.plugin.relations.result.ResolutionCallback.success;
 
 //TODO: Javadoc
-public final class TamableContextIgnoringRelationResolver
-        extends ContextIgnoringRelationResolver {
-    private final Provider<Player> playerProvider;
+public final class TamableRelationResolver
+        extends AbstractRelationResolver {
+    private final Provider<Player> localPlayerProvider;
 
     @Inject
-    public TamableContextIgnoringRelationResolver(Provider<Player> playerProvider) {
-        this.playerProvider = playerProvider;
+    public TamableRelationResolver(Provider<Player> localPlayerProvider) {
+        this.localPlayerProvider = localPlayerProvider;
     }
 
     @Override
-    protected ResolutionCallback resolveRelation(Entity entity) {
-        Tamable tamable = (Tamable) entity;
+    public ResolutionCallback resolveRelation(ResolveRequest request) {
+        Tamable tamable = (Tamable) request.entity();
 
-        if (this.doesPlayerOwnTamable(tamable)) {
+        if (doesPlayerOwnTamable(tamable)) {
             return success(Relation.FRIENDLY);
         }
 
         if (tamable instanceof Wolf) {
             Wolf wolf = (Wolf) tamable;
-            return this.resolveWolfRelation(wolf);
+            return resolveWolfRelation(wolf);
         } else {
             return success(Relation.PASSIVE);
         }
@@ -67,7 +68,7 @@ public final class TamableContextIgnoringRelationResolver
             return false;
         }
 
-        Player player = this.playerProvider.get();
+        Player player = localPlayerProvider.get();
         if (player == null) {
             return false;
         }

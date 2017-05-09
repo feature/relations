@@ -21,31 +21,23 @@
 
 package pw.stamina.plugin.relations;
 
-import com.github.zafarkhaja.semver.Version;
 import com.google.inject.Inject;
 import pw.stamina.euclid.plugin.AbstractPlugin;
-import pw.stamina.euclid.plugin.PluginLoadException;
 
 import java.util.Objects;
 
-//TODO: Javadoc
 public final class RelationsPlugin extends AbstractPlugin {
-    private final Version minecraftVersion;
     private final RelationManager relationManager;
 
+    //TODO: Minecraft version aware
+    //      Angry Rabbits
+    //      Angry Polar Bears
+
     @Inject
-    public RelationsPlugin(Version minecraftVersion,
-                           RelationManager relationManager) {
-        Objects.requireNonNull(minecraftVersion, "minecraftVersion");
+    public RelationsPlugin(RelationManager relationManager) {
         Objects.requireNonNull(relationManager, "relationManager");
 
-        this.minecraftVersion = minecraftVersion;
         this.relationManager = relationManager;
-    }
-
-    @Override
-    protected void onLoad() throws PluginLoadException {
-        super.onLoad();
     }
 
     public RelationManager getRelationManager() {

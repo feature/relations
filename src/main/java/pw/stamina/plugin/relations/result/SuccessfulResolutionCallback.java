@@ -35,7 +35,7 @@ final class SuccessfulResolutionCallback implements ResolutionCallback {
 
     @Override
     public Relation getResult() {
-        return this.result;
+        return result;
     }
 
     @Override

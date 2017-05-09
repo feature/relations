@@ -21,10 +21,9 @@
 
 package pw.stamina.plugin.relations.select;
 
-import pw.stamina.minecraftapi.entity.Entity;
 import pw.stamina.plugin.relations.Relation;
-import pw.stamina.plugin.relations.ResolutionContext;
 import pw.stamina.plugin.relations.ResolvedRelationProcessor;
+import pw.stamina.plugin.relations.request.ResolveRequest;
 
 import java.util.List;
 
@@ -34,17 +33,15 @@ public abstract class AbstractRelationSelectorService
 
     protected final Relation processRelation(
             List<ResolvedRelationProcessor> processors,
-            Relation original,
-            Entity entity,
-            ResolutionContext context) {
+            ResolveRequest request,
+            Relation original) {
 
         if (processors.isEmpty()) {
             return original;
         }
 
         return processors.stream()
-                .map(processor -> processor
-                        .process(original, entity, context))
+                .map(processor -> processor.process(request, original))
                 .findFirst()
                 .orElse(original);
     }

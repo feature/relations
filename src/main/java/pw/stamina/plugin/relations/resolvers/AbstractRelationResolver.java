@@ -26,6 +26,6 @@ public abstract class AbstractRelationResolver implements RelationResolver {
 
     @Override
     public final int compareTo(RelationResolver o) {
-        return this.getPriority().compareTo(o.getPriority());
+        return getPriority().compareTo(o.getPriority());
     }
 }

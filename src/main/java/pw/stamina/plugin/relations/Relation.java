@@ -30,6 +30,7 @@ import java.util.Optional;
  * indicates how supported systems should
  * treat entities.
  */
+//TODO: Consider migrating like we did with ResolutionContext?
 public enum Relation {
     /**
      * The entity is considered friendly.

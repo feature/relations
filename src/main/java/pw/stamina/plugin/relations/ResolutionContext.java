@@ -21,21 +21,66 @@
 
 package pw.stamina.plugin.relations;
 
-import pw.stamina.plugin.relations.resolvers.RelationResolver;
+import com.google.common.base.Strings;
+
+import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Defines a context for how a {@link RelationResolver}
- * should resolve the entity {@link Relation}.
+ * This class defines the context for when a
+ * {@link Relation} is requested to be resolved.
+ *
+ * This class is instance controlled using the
+ * {@link #getInstance(String)} method.
  */
-public enum ResolutionContext {
+public final class ResolutionContext {
+    private static final Map<String, ResolutionContext>
+            INSTANCES = new ConcurrentHashMap<>();
+
     /**
      * The {@link Relation} is requested in
      * regards attacking the entity.
      */
-    ATTACK,
+    public static final ResolutionContext ATTACK = getInstance("attack");
     /**
      * The {@link Relation} is requested in
      * regards to rendering.
      */
-    RENDER
+    public static final ResolutionContext RENDER = getInstance("render");
+
+    private final String name;
+
+    private ResolutionContext(String name) {
+        this.name = name;
+    }
+
+    /**
+     * Returns the <tt>name</tt> of this context.
+     *
+     * @return the name of this context
+     */
+    public String name() {
+        return name;
+    }
+
+    @Override
+    public String toString() {
+        return name();
+    }
+
+    //TODO: Javadoc
+    public static ResolutionContext getInstance(String name) {
+        if (Strings.nullToEmpty(name).trim().isEmpty()) {
+            throw new IllegalArgumentException(
+                    "name must not be null or empty");
+        }
+
+        name = normalizeName(name);
+        return INSTANCES.computeIfAbsent(name, ResolutionContext::new);
+    }
+
+    private static String normalizeName(String name) {
+        return name.toLowerCase(Locale.ROOT);
+    }
 }

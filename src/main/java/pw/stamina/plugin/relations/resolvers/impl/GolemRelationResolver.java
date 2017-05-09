@@ -19,37 +19,43 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package pw.stamina.plugin.relations.resolvers;
+package pw.stamina.plugin.relations.resolvers.impl;
 
-import org.junit.Before;
-import org.junit.Ignore;
 import pw.stamina.minecraftapi.entity.Entity;
+import pw.stamina.minecraftapi.entity.living.Golem;
+import pw.stamina.minecraftapi.entity.living.IronGolem;
 import pw.stamina.plugin.relations.Relation;
-import pw.stamina.plugin.relations.ResolutionContext;
 import pw.stamina.plugin.relations.request.ResolveRequest;
+import pw.stamina.plugin.relations.resolvers.AbstractRelationResolver;
 import pw.stamina.plugin.relations.result.ResolutionCallback;
 
-import static org.junit.Assert.assertEquals;
+import static pw.stamina.plugin.relations.result.ResolutionCallback.success;
 
-@Ignore
-abstract class AbstractRelationResolverTest {
-    protected RelationResolver resolver;
-    protected ResolutionContext dummyContext;
+//TODO: Javadoc
+public final class GolemRelationResolver
+        extends AbstractRelationResolver {
 
-    @Before
-    public void setupResolver() {
-        resolver = supplyResolver();
-        dummyContext = ResolutionContext.getInstance("dummy");
+    @Override
+    public ResolutionCallback resolveRelation(ResolveRequest request) {
+        Golem golem = (Golem) request.entity();
+
+        if (golem instanceof IronGolem) {
+            IronGolem ironGolem = (IronGolem) golem;
+
+            if (isIronGolemNeutral(ironGolem)) {
+                return success(Relation.NEUTRAL);
+            }
+        }
+
+        return success(Relation.PASSIVE);
     }
 
-    protected final void testResolution(Entity entity, Relation expectedRelation) {
-        assertEquals(resolve(entity).getResult(), expectedRelation);
+    private boolean isIronGolemNeutral(IronGolem ironGolem) {
+        return ironGolem.isPlayerCreated();
     }
 
-    protected final ResolutionCallback resolve(Entity entity) {
-        return resolver.resolveRelation(
-                ResolveRequest.anonymous(entity, dummyContext));
+    @Override
+    public boolean canResolve(Class<? extends Entity> entityType) {
+        return Golem.class.isAssignableFrom(entityType);
     }
-
-    protected abstract RelationResolver supplyResolver();
 }

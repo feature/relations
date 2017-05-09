@@ -24,6 +24,7 @@ package pw.stamina.plugin.relations.resolvers;
 import pw.stamina.minecraftapi.entity.Entity;
 import pw.stamina.plugin.relations.Relation;
 import pw.stamina.plugin.relations.ResolutionContext;
+import pw.stamina.plugin.relations.request.ResolveRequest;
 import pw.stamina.plugin.relations.result.ResolutionCallback;
 import pw.stamina.plugin.relations.select.RelationSelectorService;
 
@@ -45,8 +46,7 @@ public interface RelationResolver extends Comparable<RelationResolver> {
      * @return a {@link ResolutionCallback} which indicates
      * how the result of this resolver should be handled
      */
-    ResolutionCallback resolveRelation(Entity entity,
-                                       ResolutionContext context);
+    ResolutionCallback resolveRelation(ResolveRequest request);
 
     /**
      * Indicates if this resolver should try to resolve a relation

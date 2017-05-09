@@ -21,36 +21,44 @@
 
 package pw.stamina.plugin.relations.resolvers.impl;
 
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 import pw.stamina.minecraftapi.entity.Entity;
-import pw.stamina.minecraftapi.entity.living.Golem;
-import pw.stamina.minecraftapi.entity.living.IronGolem;
+import pw.stamina.minecraftapi.entity.living.Player;
 import pw.stamina.plugin.relations.Relation;
-import pw.stamina.plugin.relations.resolvers.ContextIgnoringRelationResolver;
+import pw.stamina.plugin.relations.request.ResolveRequest;
+import pw.stamina.plugin.relations.resolvers.AbstractRelationResolver;
 import pw.stamina.plugin.relations.result.ResolutionCallback;
 
 import static pw.stamina.plugin.relations.result.ResolutionCallback.success;
 
 //TODO: Javadoc
-public final class GolemContextIgnoringRelationResolver
-        extends ContextIgnoringRelationResolver {
+public final class PlayerRelationResolver
+        extends AbstractRelationResolver {
+    private final Provider<Player> localPlayerProvider;
+
+    @Inject
+    public PlayerRelationResolver(Provider<Player> localPlayerProvider) {
+        this.localPlayerProvider = localPlayerProvider;
+    }
 
     @Override
-    protected ResolutionCallback resolveRelation(Entity entity) {
-        Golem golem = (Golem) entity;
+    public ResolutionCallback resolveRelation(ResolveRequest request) {
+        Player player = (Player) request.entity();
 
-        if (golem instanceof IronGolem) {
-            IronGolem ironGolem = (IronGolem) golem;
+        return success(isLocalPlayer(player)
+                ? Relation.IGNORED
+                : Relation.PLAYER);
+    }
 
-            if (!ironGolem.isPlayerCreated()) {
-                return success(Relation.NEUTRAL);
-            }
-        }
+    private boolean isLocalPlayer(Player player) {
+        Player localPlayer = localPlayerProvider.get();
 
-        return success(Relation.PASSIVE);
+        return player == localPlayer;
     }
 
     @Override
     public boolean canResolve(Class<? extends Entity> entityType) {
-        return Golem.class.isAssignableFrom(entityType);
+        return Player.class.isAssignableFrom(entityType);
     }
 }

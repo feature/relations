@@ -22,6 +22,7 @@
 package pw.stamina.plugin.relations;
 
 import pw.stamina.minecraftapi.entity.Entity;
+import pw.stamina.plugin.relations.request.ResolveRequest;
 import pw.stamina.plugin.relations.resolvers.RelationResolver;
 import pw.stamina.plugin.relations.select.RelationSelectorService;
 
@@ -58,6 +59,9 @@ public interface RelationManager {
      * if none is found.
      */
     Relation findRenderRelation(Entity entity);
+
+    //TODO: Javadoc
+    Relation findRelation(ResolveRequest request);
 
     /**
      * Registers the specified <tt>resolver</tt> into a {@link List}

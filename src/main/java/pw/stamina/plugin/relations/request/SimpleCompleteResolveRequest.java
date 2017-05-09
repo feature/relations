@@ -19,26 +19,41 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package pw.stamina.plugin.relations.resolvers.impl.wildcard;
+package pw.stamina.plugin.relations.request;
 
-import pw.stamina.minecraftapi.entity.Entity;
-import pw.stamina.minecraftapi.entity.monster.Monster;
-import pw.stamina.plugin.relations.Relation;
-import pw.stamina.plugin.relations.result.ResolutionCallback;
+import pw.stamina.plugin.relations.ResolvedRelationProcessor;
+import pw.stamina.plugin.relations.resolvers.RelationResolver;
 
-import static pw.stamina.plugin.relations.result.ResolutionCallback.success;
+import java.util.List;
 
 //TODO: Javadoc
-public final class MonsterWildcardContextIgnoringRelationResolver
-        extends WildcardContextIgnoringRelationResolver {
+final class SimpleCompleteResolveRequest
+        implements CompleteResolveRequest {
 
-    @Override
-    protected ResolutionCallback resolveRelation(Entity entity) {
-        return success(Relation.HOSTILE);
+    private final ResolveRequest request;
+    private final List<RelationResolver> resolvers;
+    private final List<ResolvedRelationProcessor> processors;
+
+    SimpleCompleteResolveRequest(ResolveRequest request,
+                                        List<RelationResolver> resolvers,
+                                        List<ResolvedRelationProcessor> processors) {
+        this.request = request;
+        this.resolvers = resolvers;
+        this.processors = processors;
     }
 
     @Override
-    public boolean canResolve(Class<? extends Entity> entityType) {
-        return Monster.class.isAssignableFrom(entityType);
+    public ResolveRequest request() {
+        return request;
+    }
+
+    @Override
+    public List<RelationResolver> resolvers() {
+        return resolvers;
+    }
+
+    @Override
+    public List<ResolvedRelationProcessor> processors() {
+        return processors;
     }
 }

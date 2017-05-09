@@ -27,17 +27,15 @@ import pw.stamina.plugin.relations.resolvers.*;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        EndermanContextIgnoringRelationResolverTest.class,
-        GolemContextIgnoringRelationResolverTest.class,
-        HorseContextIgnoringRelationResolverTest.class,
-        TamableContextIgnoringRelationResolverTest.class,
-        VehicleContextIgnoringRelationResolverTest.class,
-        ZombiePigmanContextIgnoringRelationResolverTest.class,
+        EndermanRelationResolverTest.class,
+        GolemRelationResolverTest.class,
+        HorseRelationResolverTest.class,
+        TamableRelationResolverTest.class,
+        VehicleRelationResolverTest.class,
+        ZombiePigmanRelationResolverTest.class,
 
-        AnimalWildcardContextIgnoringRelationResolverTest.class,
-        MonsterWildcardContextIgnoringRelationResolverTest.class,
-        PlayerWildcardContextIgnoringRelationResolverTest.class
+        AnimalWildcardRelationResolverTest.class,
+        MonsterWildcardRelationResolverTest.class,
+        PlayerRelationResolverTest.class
 })
-public class RelationResolverTestSuite {
-
-}
+public class RelationResolverTestSuite {}

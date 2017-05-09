@@ -21,7 +21,7 @@
 
 package pw.stamina.plugin.relations;
 
-import pw.stamina.minecraftapi.entity.Entity;
+import pw.stamina.plugin.relations.request.ResolveRequest;
 
 /**
  * This interface is used to process relations
@@ -44,7 +44,7 @@ public interface ResolvedRelationProcessor {
      * @param context the resolution context
      * @return a new {@link Relation}, or null if none was found.
      */
-    Relation process(Relation original,
-                     Entity entity,
-                     ResolutionContext context);
+    //TODO: Javadoc
+    Relation process(ResolveRequest request,
+                     Relation original);
 }

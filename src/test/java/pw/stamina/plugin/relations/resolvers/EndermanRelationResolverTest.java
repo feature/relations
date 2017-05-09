@@ -30,20 +30,20 @@ import pw.stamina.minecraftapi.entity.monster.Enderman;
 import pw.stamina.minecraftapi.entity.monster.Monster;
 import pw.stamina.minecraftapi.entity.monster.ZombiePigman;
 import pw.stamina.plugin.relations.Relation;
-import pw.stamina.plugin.relations.resolvers.impl.EndermanContextIgnoringRelationResolver;
+import pw.stamina.plugin.relations.resolvers.impl.EndermanRelationResolver;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public final class EndermanContextIgnoringRelationResolverTest
+public final class EndermanRelationResolverTest
         extends AbstractRelationResolverTest{
 
     @Test
     public void resolveRelationNeutralTest() {
         Enderman enderman = mock(Enderman.class);
 
-        this.testResolution(enderman, Relation.NEUTRAL);
+        testResolution(enderman, Relation.NEUTRAL);
     }
 
     @Test
@@ -51,33 +51,33 @@ public final class EndermanContextIgnoringRelationResolverTest
         Enderman screamingEnderman = mock(Enderman.class);
         when(screamingEnderman.isScreaming()).thenReturn(true);
 
-        this.testResolution(screamingEnderman, Relation.HOSTILE);
+        testResolution(screamingEnderman, Relation.HOSTILE);
     }
 
     @Test(expected = ClassCastException.class)
     public void resolveRelationFailTest() {
         Wolf wolf = mock(Wolf.class);
 
-        this.resolver.resolveRelation(wolf, null);
+        resolve(wolf);
     }
 
     @Test
     public void canResolveTrueTest() {
-        assertTrue(this.resolver.canResolve(Enderman.class));
+        assertTrue(resolver.canResolve(Enderman.class));
     }
 
     @Test
     public void canResolveFalseTest() {
-        assertFalse(this.resolver.canResolve(Tamable.class));
-        assertFalse(this.resolver.canResolve(Wolf.class));
-        assertFalse(this.resolver.canResolve(Horse.class));
-        assertFalse(this.resolver.canResolve(Player.class));
-        assertFalse(this.resolver.canResolve(Monster.class));
-        assertFalse(this.resolver.canResolve(ZombiePigman.class));
+        assertFalse(resolver.canResolve(Tamable.class));
+        assertFalse(resolver.canResolve(Wolf.class));
+        assertFalse(resolver.canResolve(Horse.class));
+        assertFalse(resolver.canResolve(Player.class));
+        assertFalse(resolver.canResolve(Monster.class));
+        assertFalse(resolver.canResolve(ZombiePigman.class));
     }
 
     @Override
     protected RelationResolver supplyResolver() {
-        return new EndermanContextIgnoringRelationResolver();
+        return new EndermanRelationResolver();
     }
 }

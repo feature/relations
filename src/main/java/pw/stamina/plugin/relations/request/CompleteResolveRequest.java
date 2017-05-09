@@ -19,26 +19,19 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package pw.stamina.plugin.relations.resolvers.impl.wildcard;
+package pw.stamina.plugin.relations.request;
 
-import pw.stamina.minecraftapi.entity.Entity;
-import pw.stamina.minecraftapi.entity.living.Player;
-import pw.stamina.plugin.relations.Relation;
-import pw.stamina.plugin.relations.result.ResolutionCallback;
+import pw.stamina.plugin.relations.ResolvedRelationProcessor;
+import pw.stamina.plugin.relations.resolvers.RelationResolver;
 
-import static pw.stamina.plugin.relations.result.ResolutionCallback.success;
+import java.util.List;
 
 //TODO: Javadoc
-public final class PlayerWildcardContextIgnoringRelationResolver
-        extends WildcardContextIgnoringRelationResolver {
+public interface CompleteResolveRequest {
 
-    @Override
-    protected ResolutionCallback resolveRelation(Entity entity) {
-        return success(Relation.PLAYER);
-    }
+    ResolveRequest request();
 
-    @Override
-    public boolean canResolve(Class<? extends Entity> entityType) {
-        return Player.class.isAssignableFrom(entityType);
-    }
+    List<RelationResolver> resolvers();
+
+    List<ResolvedRelationProcessor> processors();
 }

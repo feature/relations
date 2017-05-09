@@ -23,75 +23,90 @@ package pw.stamina.plugin.relations;
 
 import com.google.inject.Inject;
 import pw.stamina.minecraftapi.entity.Entity;
+import pw.stamina.plugin.relations.request.ResolveRequest;
 import pw.stamina.plugin.relations.resolvers.DefaultResolvers;
 import pw.stamina.plugin.relations.resolvers.RelationResolver;
 import pw.stamina.plugin.relations.select.RelationSelectorService;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
-/**
- * A simple implementation of the {@link RelationManager}
- * interface. This class and its methods functions as
- * specified in the {@link RelationManager} interface. This
- * implementation is not thread safe.
- */
-public final class SimpleRelationManager
+//TODO: Javadoc
+public final class CopyOnWriteRelationManager
         implements RelationManager {
 
-    private final List<RelationResolver> resolvers;
-    private final List<ResolvedRelationProcessor> processors;
+    private final CopyOnWriteArrayList<RelationResolver> resolvers;
+    private final CopyOnWriteArrayList<ResolvedRelationProcessor> processors;
     private final RelationSelectorService selectorService;
 
     /**
-     * Constructs a new <tt>SimpleRelationManager</tt>
+     * Constructs a new <tt>CopyOnWriteRelationManager</tt>
      * with the specified default resolvers, and the
      * specified <tt>selectorService</tt>.
      *
      * @param defaultResolvers set of default resolvers
-     * @param selectorService relation selector service
+     * @param selectorService  relation selector service
      */
     @Inject
-    public SimpleRelationManager(
+    public CopyOnWriteRelationManager(
             @DefaultResolvers
-            Set<RelationResolver> defaultResolvers,
+                    Set<RelationResolver> defaultResolvers,
             RelationSelectorService selectorService) {
-        Objects.requireNonNull(defaultResolvers, "defaultResolvers");
         Objects.requireNonNull(selectorService, "selectorService");
 
-        this.resolvers = new ArrayList<>();
-        this.resolvers.addAll(defaultResolvers);
-        Collections.sort(this.resolvers);
-
+        this.resolvers = new CopyOnWriteArrayList<>();
+        this.processors = new CopyOnWriteArrayList<>();
         this.selectorService = selectorService;
-        this.processors = new ArrayList<>();
+
+        if (isDefaultResolverNotNullOrEmpty(defaultResolvers)) {
+            this.resolvers.addAll(
+                    defaultResolvers.stream()
+                            .sorted()
+                            .collect(Collectors.toList()));
+        }
+    }
+
+    private boolean isDefaultResolverNotNullOrEmpty(
+            Set<RelationResolver> defaultResolvers) {
+        return (defaultResolvers != null)
+                && !defaultResolvers.isEmpty();
     }
 
     @Override
     public Relation findAttackRelation(Entity entity) {
-        return this.findRelation(entity, ResolutionContext.ATTACK);
+        return findRelation(entity, ResolutionContext.ATTACK);
     }
 
     @Override
     public Relation findRenderRelation(Entity entity) {
-        return this.findRelation(entity, ResolutionContext.RENDER);
+        return findRelation(entity, ResolutionContext.RENDER);
     }
 
     private Relation findRelation(Entity entity,
                                   ResolutionContext context) {
-        return this.selectorService.select(
-                this.findResolvers(),
-                this.findProcessors(),
-                entity, context);
+        return findRelation(ResolveRequest.anonymous(entity, context));
+    }
+
+    @Override
+    public Relation findRelation(ResolveRequest request) {
+        return selectorService.select(
+                request.complete(
+                        findResolvers(),
+                        findProcessors()));
     }
 
     @Override
     public boolean registerResolver(RelationResolver resolver) {
         Objects.requireNonNull(resolver, "resolver");
 
-        if (!this.resolvers.contains(resolver)
-                && this.resolvers.add(resolver)) {
-            Collections.sort(this.resolvers);
-            this.selectorService.notifyResolverChange(resolver);
+        //TODO: Find insertion index instead of sorting
+        if (resolvers.addIfAbsent(resolver)) {
+            Collections.sort(resolvers);
+            selectorService.notifyResolverChange(resolver);
             return true;
         } else {
             return false;
@@ -102,8 +117,8 @@ public final class SimpleRelationManager
     public boolean unregisterResolver(RelationResolver resolver) {
         Objects.requireNonNull(resolver, "resolver");
 
-        if (this.resolvers.remove(resolver)) {
-            this.selectorService.notifyResolverChange(resolver);
+        if (resolvers.remove(resolver)) {
+            selectorService.notifyResolverChange(resolver);
             return true;
         } else {
             return false;
@@ -112,22 +127,21 @@ public final class SimpleRelationManager
 
     @Override
     public List<RelationResolver> findResolvers() {
-        return Collections.unmodifiableList(this.resolvers);
+        return Collections.unmodifiableList(resolvers);
     }
 
     @Override
     public boolean registerProcessor(ResolvedRelationProcessor processor) {
-        return !this.processors.contains(processor)
-                && this.processors.add(processor);
+        return processors.addIfAbsent(processor);
     }
 
     @Override
     public boolean unregisterProcessor(ResolvedRelationProcessor processor) {
-        return this.processors.remove(processor);
+        return processors.remove(processor);
     }
 
     @Override
     public List<ResolvedRelationProcessor> findProcessors() {
-        return Collections.unmodifiableList(this.processors);
+        return Collections.unmodifiableList(processors);
     }
 }

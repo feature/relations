@@ -31,39 +31,41 @@ import pw.stamina.minecraftapi.entity.living.Player;
 import pw.stamina.minecraftapi.entity.monster.Monster;
 import pw.stamina.minecraftapi.entity.monster.ZombiePigman;
 import pw.stamina.plugin.relations.Relation;
-import pw.stamina.plugin.relations.resolvers.impl.wildcard.PlayerWildcardContextIgnoringRelationResolver;
+import pw.stamina.plugin.relations.resolvers.impl.wildcard.AnimalWildcardRelationResolver;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
-public final class PlayerWildcardContextIgnoringRelationResolverTest
+public final class AnimalWildcardRelationResolverTest
         extends AbstractRelationResolverTest {
 
     @Test
     public void resolveRelationSuccessTest() {
-        Player player = mock(Player.class);
+        Wolf wolf = mock(Wolf.class);
+        Horse horse = mock(Horse.class);
 
-        this.testResolution(player, Relation.PLAYER);
+        testResolution(wolf, Relation.PASSIVE);
+        testResolution(horse, Relation.PASSIVE);
     }
 
     @Test
     public void canResolveTrueTest() {
-        assertTrue(this.resolver.canResolve(Player.class));
+        assertTrue(resolver.canResolve(Animal.class));
+        assertTrue(resolver.canResolve(Tamable.class));
+        assertTrue(resolver.canResolve(Wolf.class));
+        assertTrue(resolver.canResolve(Horse.class));
     }
 
     @Test
     public void canResolveFalseTest() {
-        assertFalse(this.resolver.canResolve(Animal.class));
-        assertFalse(this.resolver.canResolve(Tamable.class));
-        assertFalse(this.resolver.canResolve(Wolf.class));
-        assertFalse(this.resolver.canResolve(Horse.class));
-        assertFalse(this.resolver.canResolve(Monster.class));
-        assertFalse(this.resolver.canResolve(ZombiePigman.class));
+        assertFalse(resolver.canResolve(Player.class));
+        assertFalse(resolver.canResolve(Monster.class));
+        assertFalse(resolver.canResolve(ZombiePigman.class));
     }
 
     @Ignore
     @Override
     protected RelationResolver supplyResolver() {
-        return new PlayerWildcardContextIgnoringRelationResolver();
+        return new AnimalWildcardRelationResolver();
     }
 }

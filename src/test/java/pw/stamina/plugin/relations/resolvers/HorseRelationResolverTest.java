@@ -24,18 +24,19 @@ package pw.stamina.plugin.relations.resolvers;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import pw.stamina.minecraftapi.entity.Entity;
 import pw.stamina.minecraftapi.entity.animal.Animal;
 import pw.stamina.minecraftapi.entity.animal.Horse;
 import pw.stamina.minecraftapi.entity.animal.Tamable;
 import pw.stamina.minecraftapi.entity.animal.Wolf;
-import pw.stamina.minecraftapi.entity.item.Boat;
-import pw.stamina.minecraftapi.entity.item.Minecart;
 import pw.stamina.minecraftapi.entity.living.Player;
 import pw.stamina.minecraftapi.entity.monster.Monster;
 import pw.stamina.minecraftapi.entity.monster.ZombiePigman;
 import pw.stamina.plugin.relations.Relation;
-import pw.stamina.plugin.relations.resolvers.impl.VehicleContextIgnoringRelationResolver;
+import pw.stamina.plugin.relations.request.ResolveRequest;
+import pw.stamina.plugin.relations.resolvers.impl.HorseRelationResolver;
 import pw.stamina.plugin.relations.result.ResolutionCallback;
+import pw.stamina.plugin.relations.result.ResolutionCallbackType;
 
 import java.util.UUID;
 
@@ -43,57 +44,63 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public final class VehicleContextIgnoringRelationResolverTest
-        extends AbstractRelationResolverTest {
+public final class HorseRelationResolverTest
+        extends AbstractRelationResolverTest{
     private Player player;
 
     @Before
-    public void setupAndPlayer() {
-        this.player = mock(Player.class);
-        when(this.player.getUniqueID()).thenReturn(UUID.randomUUID());
+    public void setupPlayer() {
+        player = mock(Player.class);
+        when(player.getUniqueID()).thenReturn(UUID.randomUUID());
+    }
+
+    @Test
+    public void horseWithoutRiderTest() {
+        Horse horse = mock(Horse.class);
+
+        testResolution(horse, Relation.PASSIVE);
+    }
+
+    @Test
+    public void horseRiddenByPlayerTest() {
+        Horse horseRiddenByPlayer = mock(Horse.class);
+        when(horseRiddenByPlayer.getRider()).thenReturn(player);
+
+        testResolution(horseRiddenByPlayer, Relation.IGNORED);
+    }
+
+    @Test
+    public void horseRiddenByOther() {
+        Horse horseRiddenByOther = mock(Horse.class);
+        Entity rider = mock(Entity.class);
+        when(horseRiddenByOther.getRider()).thenReturn(rider);
+
+        ResolutionCallback callback = resolver
+                .resolveRelation(ResolveRequest
+                        .anonymous(horseRiddenByOther, dummyContext));
+
+        assertEquals(callback.getType(), ResolutionCallbackType.NESTED_RESOLVE);
+        assertEquals(callback.getNestedResolveTarget(), rider);
     }
 
     @Test
     public void canResolveTrueTest() {
-        assertTrue(this.resolver.canResolve(Boat.class));
-        assertTrue(this.resolver.canResolve(Minecart.class));
-    }
-
-    @Test
-    public void resolveRelationRiddenByPlayer() {
-        Boat boatRiddenByPlayer = mock(Boat.class);
-        Minecart minecartRiddenByPlayer = mock(Minecart.class);
-
-        when(boatRiddenByPlayer.getRider()).thenReturn(this.player);
-        when(minecartRiddenByPlayer.getRider()).thenReturn(this.player);
-
-        this.testResolution(boatRiddenByPlayer, Relation.IGNORED);
-        this.testResolution(minecartRiddenByPlayer, Relation.IGNORED);
-    }
-
-    @Test
-    public void resolveRelationNotRiddenByPlayer() {
-        Boat boat = mock(Boat.class);
-        Minecart minecart = mock(Minecart.class);
-
-        assertEquals(this.resolver.resolveRelation(boat, null), ResolutionCallback.failed());
-        assertEquals(this.resolver.resolveRelation(minecart, null), ResolutionCallback.failed());
+        assertTrue(resolver.canResolve(Horse.class));
     }
 
     @Test
     public void canResolveFalseTest() {
-        assertFalse(this.resolver.canResolve(Animal.class));
-        assertFalse(this.resolver.canResolve(Horse.class));
-        assertFalse(this.resolver.canResolve(Player.class));
-        assertFalse(this.resolver.canResolve(Monster.class));
-        assertFalse(this.resolver.canResolve(ZombiePigman.class));
-        assertFalse(this.resolver.canResolve(Tamable.class));
-        assertFalse(this.resolver.canResolve(Wolf.class));
+        assertFalse(resolver.canResolve(Animal.class));
+        assertFalse(resolver.canResolve(Player.class));
+        assertFalse(resolver.canResolve(Monster.class));
+        assertFalse(resolver.canResolve(ZombiePigman.class));
+        assertFalse(resolver.canResolve(Tamable.class));
+        assertFalse(resolver.canResolve(Wolf.class));
     }
 
     @Ignore
     @Override
     protected RelationResolver supplyResolver() {
-        return new VehicleContextIgnoringRelationResolver(() -> this.player);
+        return new HorseRelationResolver(() -> player);
     }
 }

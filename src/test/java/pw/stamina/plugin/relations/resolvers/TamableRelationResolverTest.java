@@ -34,7 +34,8 @@ import pw.stamina.minecraftapi.entity.living.Player;
 import pw.stamina.minecraftapi.entity.monster.Monster;
 import pw.stamina.minecraftapi.entity.monster.ZombiePigman;
 import pw.stamina.plugin.relations.Relation;
-import pw.stamina.plugin.relations.resolvers.impl.TamableContextIgnoringRelationResolver;
+import pw.stamina.plugin.relations.request.ResolveRequest;
+import pw.stamina.plugin.relations.resolvers.impl.TamableRelationResolver;
 import pw.stamina.plugin.relations.result.ResolutionCallback;
 import pw.stamina.plugin.relations.result.ResolutionCallbackType;
 
@@ -44,21 +45,21 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public final class TamableContextIgnoringRelationResolverTest
+public final class TamableRelationResolverTest
         extends AbstractRelationResolverTest{
     private Player player;
 
     @Before
     public void setupPlayer() {
-        this.player = mock(Player.class);
-        when(this.player.getUniqueID()).thenReturn(UUID.randomUUID());
+        player = mock(Player.class);
+        when(player.getUniqueID()).thenReturn(UUID.randomUUID());
     }
 
     @Before
     public void setupResolverAndPlayer() {
-        this.player = mock(Player.class);
-        when(this.player.getUniqueID()).thenReturn(UUID.randomUUID());
-        this.resolver = new TamableContextIgnoringRelationResolver(() -> this.player);
+        player = mock(Player.class);
+        when(player.getUniqueID()).thenReturn(UUID.randomUUID());
+        resolver = new TamableRelationResolver(() -> player);
     }
 
     @Test
@@ -66,7 +67,7 @@ public final class TamableContextIgnoringRelationResolverTest
         Tamable tamedTamable = mock(Tamable.class);
         when(tamedTamable.isTamed()).thenReturn(true);
 
-        this.testResolution(tamedTamable, Relation.PASSIVE);
+        testResolution(tamedTamable, Relation.PASSIVE);
     }
 
     @Test
@@ -75,8 +76,8 @@ public final class TamableContextIgnoringRelationResolverTest
         Wolf angryUntamedWolf = mock(Wolf.class);
         when(angryUntamedWolf.isAngry()).thenReturn(true);
 
-        this.testResolution(untamedWolf, Relation.PASSIVE);
-        this.testResolution(angryUntamedWolf, Relation.HOSTILE);
+        testResolution(untamedWolf, Relation.PASSIVE);
+        testResolution(angryUntamedWolf, Relation.HOSTILE);
     }
 
     @Test
@@ -87,8 +88,9 @@ public final class TamableContextIgnoringRelationResolverTest
         when(tamedWolf.isTamed()).thenReturn(true);
         when(tamedWolf.getOwner()).thenReturn(owner);
 
-        ResolutionCallback callback = this.resolver
-                .resolveRelation(tamedWolf, null);
+        ResolutionCallback callback = resolver
+                .resolveRelation(ResolveRequest
+                        .anonymous(tamedWolf, dummyContext));
 
         assertEquals(callback.getType(), ResolutionCallbackType.NESTED_RESOLVE);
         assertEquals(callback.getNestedResolveTarget(), owner);
@@ -97,39 +99,39 @@ public final class TamableContextIgnoringRelationResolverTest
     @Test
     public void testOwnedWolf() {
         Wolf ownedWolf = mock(Wolf.class);
-        UUID playerId = this.player.getUniqueID();
+        UUID playerId = player.getUniqueID();
 
         when(ownedWolf.isTamed()).thenReturn(true);
         when(ownedWolf.getOwnerId()).thenReturn(playerId);
 
-        this.testResolution(ownedWolf, Relation.FRIENDLY);
+        testResolution(ownedWolf, Relation.FRIENDLY);
     }
 
     @Test(expected = ClassCastException.class)
     public void testFailedResolve() {
         Boat boat = mock(Boat.class);
 
-        this.resolver.resolveRelation(boat, null);
+        resolve(boat);
     }
 
     @Test
     public void canResolveTrueTest() {
-        assertTrue(this.resolver.canResolve(Tamable.class));
-        assertTrue(this.resolver.canResolve(Wolf.class));
+        assertTrue(resolver.canResolve(Tamable.class));
+        assertTrue(resolver.canResolve(Wolf.class));
     }
 
     @Test
     public void canResolveFalseTest() {
-        assertFalse(this.resolver.canResolve(Animal.class));
-        assertFalse(this.resolver.canResolve(Player.class));
-        assertFalse(this.resolver.canResolve(Horse.class));
-        assertFalse(this.resolver.canResolve(Monster.class));
-        assertFalse(this.resolver.canResolve(ZombiePigman.class));
+        assertFalse(resolver.canResolve(Animal.class));
+        assertFalse(resolver.canResolve(Player.class));
+        assertFalse(resolver.canResolve(Horse.class));
+        assertFalse(resolver.canResolve(Monster.class));
+        assertFalse(resolver.canResolve(ZombiePigman.class));
     }
 
     @Ignore
     @Override
     protected RelationResolver supplyResolver() {
-        return new TamableContextIgnoringRelationResolver(() -> this.player);
+        return new TamableRelationResolver(() -> player);
     }
 }
