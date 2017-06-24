@@ -19,29 +19,25 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package pw.stamina.plugin.relations.resolvers.impl.wildcard;
+package pw.stamina.plugin.relations.resolvers;
 
-import pw.stamina.minecraftapi.entity.Entity;
-import pw.stamina.minecraftapi.entity.animal.Animal;
-import pw.stamina.minecraftapi.entity.monster.Monster;
-import pw.stamina.plugin.relations.Relation;
-import pw.stamina.plugin.relations.request.ResolveRequest;
-import pw.stamina.plugin.relations.result.ResolutionCallback;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import pw.stamina.plugin.relations.resolvers.impl.*;
+import pw.stamina.plugin.relations.resolvers.impl.wildcard.AnimalWildcardRelationResolverTest;
+import pw.stamina.plugin.relations.resolvers.impl.wildcard.MonsterWildcardRelationResolverTest;
 
-import static pw.stamina.plugin.relations.result.ResolutionCallback.success;
+@RunWith(Suite.class)
+@Suite.SuiteClasses({
+        EndermanRelationResolverTest.class,
+        GolemRelationResolverTest.class,
+        HorseRelationResolverTest.class,
+        PlayerRelationResolverTest.class,
+        TamableRelationResolverTest.class,
+        VehicleRelationResolverTest.class,
+        ZombiePigmanRelationResolverTest.class,
 
-//TODO: Javadoc
-final class AnimalWildcardRelationResolver
-        extends WildcardRelationResolver {
-
-    @Override
-    public ResolutionCallback resolveRelation(ResolveRequest request) {
-        return success(Relation.PASSIVE);
-    }
-
-    @Override
-    public boolean canResolve(Class<? extends Entity> entityType) {
-        return Animal.class.isAssignableFrom(entityType)
-                && !Monster.class.isAssignableFrom(entityType);
-    }
-}
+        AnimalWildcardRelationResolverTest.class,
+        MonsterWildcardRelationResolverTest.class
+})
+public final class RelationResolverTestSuite {}

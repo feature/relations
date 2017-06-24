@@ -19,37 +19,28 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package pw.stamina.plugin.relations.resolvers;
+package pw.stamina.plugin.relations;
 
-import org.junit.Before;
-import org.junit.Ignore;
-import pw.stamina.minecraftapi.entity.Entity;
-import pw.stamina.plugin.relations.Relation;
-import pw.stamina.plugin.relations.ResolutionContext;
-import pw.stamina.plugin.relations.request.ResolveRequest;
-import pw.stamina.plugin.relations.result.ResolutionCallback;
+import com.google.inject.PrivateModule;
+import com.google.inject.Singleton;
+import pw.stamina.plugin.relations.resolvers.impl.StandardRelationResolversModule;
+import pw.stamina.plugin.relations.resolvers.impl.wildcard.WildcardRelationResolversModule;
+import pw.stamina.plugin.relations.select.CachingRelationSelectorService;
+import pw.stamina.plugin.relations.select.RelationSelectorService;
 
-import static org.junit.Assert.assertEquals;
+public final class StandardRelationsModule extends PrivateModule {
 
-@Ignore
-abstract class AbstractRelationResolverTest {
-    protected RelationResolver resolver;
-    protected ResolutionContext dummyContext;
+    @Override
+    protected void configure() {
+        install(new StandardRelationResolversModule());
+        install(new WildcardRelationResolversModule());
 
-    @Before
-    public void setupResolver() {
-        resolver = supplyResolver();
-        dummyContext = ResolutionContext.getInstance("dummy");
+        bind(RelationSelectorService.class).to(CachingRelationSelectorService.class);
+
+        bind(RelationManager.class)
+                .to(CopyOnWriteRelationManager.class)
+                .in(Singleton.class);
+
+        expose(RelationManager.class);
     }
-
-    protected final void testResolution(Entity entity, Relation expectedRelation) {
-        assertEquals(resolve(entity).getResult(), expectedRelation);
-    }
-
-    protected final ResolutionCallback resolve(Entity entity) {
-        return resolver.resolveRelation(
-                ResolveRequest.anonymous(entity, dummyContext));
-    }
-
-    protected abstract RelationResolver supplyResolver();
 }

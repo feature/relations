@@ -19,29 +19,35 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package pw.stamina.plugin.relations.resolvers.impl.wildcard;
+package pw.stamina.plugin.relations;
 
-import pw.stamina.minecraftapi.entity.Entity;
-import pw.stamina.minecraftapi.entity.animal.Animal;
-import pw.stamina.minecraftapi.entity.monster.Monster;
-import pw.stamina.plugin.relations.Relation;
-import pw.stamina.plugin.relations.request.ResolveRequest;
-import pw.stamina.plugin.relations.result.ResolutionCallback;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
-import static pw.stamina.plugin.relations.result.ResolutionCallback.success;
+import java.util.Optional;
 
-//TODO: Javadoc
-final class AnimalWildcardRelationResolver
-        extends WildcardRelationResolver {
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
-    @Override
-    public ResolutionCallback resolveRelation(ResolveRequest request) {
-        return success(Relation.PASSIVE);
+public final class RelationInvalidInputTests {
+
+    @Rule
+    public final ExpectedException thrown = ExpectedException.none();
+
+    @Test
+    public void from_unknownRelationNameNonNullInput_shouldReturn() {
+        assertThat(Relation.from("Blah"), is(Optional.empty()));
+        assertThat(Relation.from("bLaH"), is(Optional.empty()));
+        assertThat(Relation.from("foo"), is(Optional.empty()));
+        assertThat(Relation.from("bar"), is(Optional.empty()));
     }
 
-    @Override
-    public boolean canResolve(Class<? extends Entity> entityType) {
-        return Animal.class.isAssignableFrom(entityType)
-                && !Monster.class.isAssignableFrom(entityType);
+    @Test
+    public void from_nullInput_shouldThrowException() {
+        thrown.expect(NullPointerException.class);
+        thrown.expectMessage("input");
+
+        Relation.from(null);
     }
 }

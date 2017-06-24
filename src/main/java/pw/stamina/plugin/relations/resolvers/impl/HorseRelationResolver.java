@@ -28,42 +28,22 @@ import pw.stamina.minecraftapi.entity.animal.Horse;
 import pw.stamina.minecraftapi.entity.living.Player;
 import pw.stamina.plugin.relations.Relation;
 import pw.stamina.plugin.relations.request.ResolveRequest;
-import pw.stamina.plugin.relations.resolvers.AbstractRelationResolver;
 import pw.stamina.plugin.relations.result.ResolutionCallback;
 
-import static pw.stamina.plugin.relations.result.ResolutionCallback.nestedResolve;
 import static pw.stamina.plugin.relations.result.ResolutionCallback.success;
 
 //TODO: Javadoc
-public final class HorseRelationResolver
-        extends AbstractRelationResolver {
-    private final Provider<Player> localPlayerProvider;
+final class HorseRelationResolver
+        extends AbstractRiddenEntityRelationResolver {
 
     @Inject
     public HorseRelationResolver(Provider<Player> localPlayerProvider) {
-        this.localPlayerProvider = localPlayerProvider;
+        super(localPlayerProvider);
     }
 
     @Override
-    public ResolutionCallback resolveRelation(ResolveRequest request) {
-        Horse horse = (Horse) request.entity();
-        Entity rider = horse.getRider();
-
-        if (rider == null) {
-            return success(Relation.PASSIVE);
-        }
-
-        if (isRiderLocalPlayer(rider)) {
-            return success(Relation.IGNORED);
-        } else {
-            return nestedResolve(rider);
-        }
-    }
-
-    private boolean isRiderLocalPlayer(Entity rider) {
-        Player localPlayer = localPlayerProvider.get();
-
-        return rider == localPlayer;
+    protected ResolutionCallback resolveUnriddenEntity(ResolveRequest request) {
+        return success(Relation.PASSIVE);
     }
 
     @Override

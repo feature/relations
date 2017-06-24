@@ -11,26 +11,34 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: pw.stamina:miscere:0.1.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: pw.stamina.minecraft-api:1.7.2:0.1.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: com.github.zafarkhaja:java-semver:0.9.0" level="project" />
+    <orderEntry type="library" name="Maven: org.spongepowered:mixin:0.6.8-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: com.google.guava:guava:17.0" level="project" />
+    <orderEntry type="library" name="Maven: commons-io:commons-io:2.4" level="project" />
+    <orderEntry type="library" name="Maven: net.minecraft:launchwrapper:1.11" level="project" />
+    <orderEntry type="library" name="Maven: org.lwjgl.lwjgl:lwjgl:2.9.1" level="project" />
+    <orderEntry type="library" name="Maven: org.lwjgl.lwjgl:lwjgl-platform:natives-windows:2.9.1" level="project" />
+    <orderEntry type="library" name="Maven: org.lwjgl.lwjgl:lwjgl-platform:natives-linux:2.9.1" level="project" />
+    <orderEntry type="library" name="Maven: org.lwjgl.lwjgl:lwjgl-platform:natives-osx:2.9.1" level="project" />
+    <orderEntry type="library" name="Maven: net.java.jinput:jinput:2.0.5" level="project" />
+    <orderEntry type="library" name="Maven: net.java.jutils:jutils:1.0.0" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: net.java.jinput:jinput-platform:natives-linux:2.0.5" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: net.java.jinput:jinput-platform:natives-windows:2.0.5" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: net.java.jinput:jinput-platform:natives-osx:2.0.5" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-core:2.0-beta9" level="project" />
+    <orderEntry type="library" name="Maven: org.ow2.asm:asm-debug-all:5.0.3" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-api:2.0-beta9" level="project" />
+    <orderEntry type="library" name="Maven: net.sf.jopt-simple:jopt-simple:4.5" level="project" />
     <orderEntry type="library" name="Maven: pw.stamina:euclid:0.1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.google.inject:guice:4.1.0" level="project" />
     <orderEntry type="library" name="Maven: javax.inject:javax.inject:1" level="project" />
     <orderEntry type="library" name="Maven: aopalliance:aopalliance:1.0" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.6.1" level="project" />
-    <orderEntry type="library" name="Maven: com.github.zafarkhaja:java-semver:0.9.0" level="project" />
-    <orderEntry type="library" name="Maven: pw.stamina:causam:1.0.0" level="project" />
-    <orderEntry type="library" name="Maven: pw.stamina:mandate:3.0.2" level="project" />
-    <orderEntry type="library" name="Maven: pw.stamina:minecraft-api:0.1.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: pw.stamina.coverage:coverage-injection:0.1.0" level="project" />
-    <orderEntry type="library" name="Maven: org.ow2.asm:asm-all:5.2" level="project" />
-    <orderEntry type="library" name="Maven: pw.stamina.coverage:coverage-model:0.1.0" level="project" />
-    <orderEntry type="library" name="Maven: pw.stamina:occasum:0.1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.google.inject.extensions:guice-multibindings:4.1.0" level="project" />
-    <orderEntry type="library" name="Maven: com.google.auto.service:auto-service:1.0-rc2" level="project" />
-    <orderEntry type="library" name="Maven: com.google.auto:auto-common:0.3" level="project" />
-    <orderEntry type="library" name="Maven: com.google.guava:guava:18.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.12" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.hamcrest:hamcrest-core:1.3" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.hamcrest:hamcrest-all:1.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.mockito:mockito-core:2.7.19" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: net.bytebuddy:byte-buddy:1.6.11" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: net.bytebuddy:byte-buddy-agent:1.6.11" level="project" />

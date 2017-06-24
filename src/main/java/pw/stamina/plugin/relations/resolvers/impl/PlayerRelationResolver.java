@@ -33,7 +33,7 @@ import pw.stamina.plugin.relations.result.ResolutionCallback;
 import static pw.stamina.plugin.relations.result.ResolutionCallback.success;
 
 //TODO: Javadoc
-public final class PlayerRelationResolver
+final class PlayerRelationResolver
         extends AbstractRelationResolver {
     private final Provider<Player> localPlayerProvider;
 
@@ -46,14 +46,15 @@ public final class PlayerRelationResolver
     public ResolutionCallback resolveRelation(ResolveRequest request) {
         Player player = (Player) request.entity();
 
-        return success(isLocalPlayer(player)
-                ? Relation.IGNORED
-                : Relation.PLAYER);
+        if (isLocalPlayer(player)) {
+            return success(Relation.IGNORED);
+        } else {
+            return success(Relation.PLAYER);
+        }
     }
 
     private boolean isLocalPlayer(Player player) {
         Player localPlayer = localPlayerProvider.get();
-
         return player == localPlayer;
     }
 

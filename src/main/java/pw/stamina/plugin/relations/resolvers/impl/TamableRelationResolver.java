@@ -32,13 +32,11 @@ import pw.stamina.plugin.relations.request.ResolveRequest;
 import pw.stamina.plugin.relations.resolvers.AbstractRelationResolver;
 import pw.stamina.plugin.relations.result.ResolutionCallback;
 
-import java.util.UUID;
-
 import static pw.stamina.plugin.relations.result.ResolutionCallback.nestedResolve;
 import static pw.stamina.plugin.relations.result.ResolutionCallback.success;
 
 //TODO: Javadoc
-public final class TamableRelationResolver
+final class TamableRelationResolver
         extends AbstractRelationResolver {
     private final Provider<Player> localPlayerProvider;
 
@@ -51,7 +49,7 @@ public final class TamableRelationResolver
     public ResolutionCallback resolveRelation(ResolveRequest request) {
         Tamable tamable = (Tamable) request.entity();
 
-        if (doesPlayerOwnTamable(tamable)) {
+        if (doesLocalPlayerOwnTamable(tamable)) {
             return success(Relation.FRIENDLY);
         }
 
@@ -63,33 +61,39 @@ public final class TamableRelationResolver
         }
     }
 
-    private boolean doesPlayerOwnTamable(Tamable tamable) {
+    private boolean doesLocalPlayerOwnTamable(Tamable tamable) {
         if (!tamable.isTamed()) {
             return false;
         }
 
-        Player player = localPlayerProvider.get();
-        if (player == null) {
-            return false;
-        }
+        Player localPlayer = localPlayerProvider.get();
+        Entity owner = tamable.getOwner();
 
-        UUID owner = tamable.getOwnerId();
-        return player.getUniqueID().equals(owner);
+        return owner == localPlayer;
     }
 
     private ResolutionCallback resolveWolfRelation(Wolf wolf) {
         if (wolf.isAngry()) {
             return success(Relation.HOSTILE);
         } else if (wolf.isTamed()) {
-            Entity owner = wolf.getOwner();
-
-            if (owner != null) {
-                return nestedResolve(owner);
-            } else {
-                return success(Relation.NEUTRAL);
-            }
+            return resolveTamedWolfRelation(wolf);
         } else {
             return success(Relation.PASSIVE);
+        }
+    }
+
+    private ResolutionCallback resolveTamedWolfRelation(Wolf wolf) {
+        Entity owner = wolf.getOwner();
+
+        if (owner != null) {
+            return nestedResolve(owner);
+        } else {
+            //TODO: Integrate in documentation
+            //Tamed wolfes are never angry, therefore their
+            // hostility state cannot be determined, and should
+            // be treated as hostile.
+
+            return success(Relation.HOSTILE);
         }
     }
 

@@ -19,20 +19,25 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package pw.stamina.plugin.relations.resolvers;
+package pw.stamina.plugin.relations.resolvers.impl.wildcard;
 
-import com.google.inject.BindingAnnotation;
-import pw.stamina.plugin.relations.RelationManager;
+import com.google.inject.AbstractModule;
+import com.google.inject.multibindings.Multibinder;
+import pw.stamina.plugin.relations.resolvers.RelationResolver;
 
-import java.lang.annotation.*;
+import java.util.stream.Stream;
 
-/**
- * Guice binding annotation. This annotation is used
- * to specify the default {@link RelationResolver}s
- * for the {@link RelationManager} to use.
- */
-@Documented
-@BindingAnnotation
-@Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD})
-@Retention(RetentionPolicy.RUNTIME)
-public @interface DefaultResolvers {}
+public final class WildcardRelationResolversModule extends AbstractModule {
+
+    @Override
+    protected void configure() {
+        Multibinder<RelationResolver> defaultResolversBinder =
+                Multibinder.newSetBinder(binder(),
+                        RelationResolver.class);
+
+        Stream.of(
+                AnimalWildcardRelationResolver.class,
+                MonsterWildcardRelationResolver.class
+        ).forEach(resolver -> defaultResolversBinder.addBinding().to(resolver));
+    }
+}

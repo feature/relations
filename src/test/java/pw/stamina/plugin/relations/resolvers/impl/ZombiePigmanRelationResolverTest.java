@@ -19,88 +19,67 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package pw.stamina.plugin.relations.resolvers;
+package pw.stamina.plugin.relations.resolvers.impl;
 
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import pw.stamina.minecraftapi.entity.Entity;
-import pw.stamina.minecraftapi.entity.animal.Animal;
 import pw.stamina.minecraftapi.entity.animal.Horse;
 import pw.stamina.minecraftapi.entity.animal.Tamable;
 import pw.stamina.minecraftapi.entity.animal.Wolf;
+import pw.stamina.minecraftapi.entity.living.Golem;
 import pw.stamina.minecraftapi.entity.living.Player;
 import pw.stamina.minecraftapi.entity.monster.Monster;
 import pw.stamina.minecraftapi.entity.monster.ZombiePigman;
 import pw.stamina.plugin.relations.Relation;
-import pw.stamina.plugin.relations.request.ResolveRequest;
-import pw.stamina.plugin.relations.resolvers.impl.HorseRelationResolver;
-import pw.stamina.plugin.relations.result.ResolutionCallback;
-import pw.stamina.plugin.relations.result.ResolutionCallbackType;
-
-import java.util.UUID;
+import pw.stamina.plugin.relations.resolvers.RelationResolver;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public final class HorseRelationResolverTest
-        extends AbstractRelationResolverTest{
-    private Player player;
+public final class ZombiePigmanRelationResolverTest
+        extends AbstractRelationResolverTest {
 
-    @Before
-    public void setupPlayer() {
-        player = mock(Player.class);
-        when(player.getUniqueID()).thenReturn(UUID.randomUUID());
+    @Test
+    public void resolveRelationNeutralZombiePigmanTest() {
+        ZombiePigman zombiePigman = mock(ZombiePigman.class);
+
+        testResolution(zombiePigman, Relation.NEUTRAL);
     }
 
     @Test
-    public void horseWithoutRiderTest() {
-        Horse horse = mock(Horse.class);
+    public void resolveRelationAngryZombiePigmanTest() {
+        ZombiePigman angryZombiePigman = mock(ZombiePigman.class);
+        when(angryZombiePigman.isAngry()).thenReturn(true);
 
-        testResolution(horse, Relation.PASSIVE);
+        testResolution(angryZombiePigman, Relation.HOSTILE);
     }
 
-    @Test
-    public void horseRiddenByPlayerTest() {
-        Horse horseRiddenByPlayer = mock(Horse.class);
-        when(horseRiddenByPlayer.getRider()).thenReturn(player);
+    @Test(expected = ClassCastException.class)
+    public void resolveRelationFailTest() {
+        Player player = mock(Player.class);
 
-        testResolution(horseRiddenByPlayer, Relation.IGNORED);
-    }
-
-    @Test
-    public void horseRiddenByOther() {
-        Horse horseRiddenByOther = mock(Horse.class);
-        Entity rider = mock(Entity.class);
-        when(horseRiddenByOther.getRider()).thenReturn(rider);
-
-        ResolutionCallback callback = resolver
-                .resolveRelation(ResolveRequest
-                        .anonymous(horseRiddenByOther, dummyContext));
-
-        assertEquals(callback.getType(), ResolutionCallbackType.NESTED_RESOLVE);
-        assertEquals(callback.getNestedResolveTarget(), rider);
+        resolve(player);
     }
 
     @Test
     public void canResolveTrueTest() {
-        assertTrue(resolver.canResolve(Horse.class));
+        assertTrue(resolver.canResolve(ZombiePigman.class));
     }
 
     @Test
     public void canResolveFalseTest() {
-        assertFalse(resolver.canResolve(Animal.class));
-        assertFalse(resolver.canResolve(Player.class));
-        assertFalse(resolver.canResolve(Monster.class));
-        assertFalse(resolver.canResolve(ZombiePigman.class));
         assertFalse(resolver.canResolve(Tamable.class));
         assertFalse(resolver.canResolve(Wolf.class));
+        assertFalse(resolver.canResolve(Horse.class));
+        assertFalse(resolver.canResolve(Player.class));
+        assertFalse(resolver.canResolve(Monster.class));
+        assertFalse(resolver.canResolve(Golem.class));
     }
 
     @Ignore
     @Override
     protected RelationResolver supplyResolver() {
-        return new HorseRelationResolver(() -> player);
+        return new ZombiePigmanRelationResolver();
     }
 }

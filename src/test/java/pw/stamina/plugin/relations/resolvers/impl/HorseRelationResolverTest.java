@@ -19,119 +19,88 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package pw.stamina.plugin.relations.resolvers;
+package pw.stamina.plugin.relations.resolvers.impl;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import pw.stamina.minecraftapi.entity.Entity;
 import pw.stamina.minecraftapi.entity.animal.Animal;
 import pw.stamina.minecraftapi.entity.animal.Horse;
 import pw.stamina.minecraftapi.entity.animal.Tamable;
 import pw.stamina.minecraftapi.entity.animal.Wolf;
-import pw.stamina.minecraftapi.entity.item.Boat;
 import pw.stamina.minecraftapi.entity.living.Player;
 import pw.stamina.minecraftapi.entity.monster.Monster;
 import pw.stamina.minecraftapi.entity.monster.ZombiePigman;
 import pw.stamina.plugin.relations.Relation;
 import pw.stamina.plugin.relations.request.ResolveRequest;
-import pw.stamina.plugin.relations.resolvers.impl.TamableRelationResolver;
+import pw.stamina.plugin.relations.resolvers.RelationResolver;
 import pw.stamina.plugin.relations.result.ResolutionCallback;
 import pw.stamina.plugin.relations.result.ResolutionCallbackType;
 
-import java.util.UUID;
-
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public final class TamableRelationResolverTest
-        extends AbstractRelationResolverTest{
+@RunWith(MockitoJUnitRunner.class)
+public final class HorseRelationResolverTest
+        extends AbstractRelationResolverTest {
+    @Mock
     private Player player;
+    @Mock
+    private Entity otherRider;
+
+    @Mock
+    private Horse horse;
+    @Mock
+    private Horse horseRiddenByPlayer;
+    @Mock
+    private Horse horseRiddenByOther;
 
     @Before
     public void setupPlayer() {
-        player = mock(Player.class);
-        when(player.getUniqueID()).thenReturn(UUID.randomUUID());
-    }
-
-    @Before
-    public void setupResolverAndPlayer() {
-        player = mock(Player.class);
-        when(player.getUniqueID()).thenReturn(UUID.randomUUID());
-        resolver = new TamableRelationResolver(() -> player);
+        when(horseRiddenByPlayer.getRider()).thenReturn(player);
+        when(horseRiddenByOther.getRider()).thenReturn(otherRider);
     }
 
     @Test
-    public void testTamable() {
-        Tamable tamedTamable = mock(Tamable.class);
-        when(tamedTamable.isTamed()).thenReturn(true);
-
-        testResolution(tamedTamable, Relation.PASSIVE);
+    public void horseWithoutRiderTest() {
+        testResolution(horse, Relation.PASSIVE);
     }
 
     @Test
-    public void testUntamedWolf() {
-        Wolf untamedWolf = mock(Wolf.class);
-        Wolf angryUntamedWolf = mock(Wolf.class);
-        when(angryUntamedWolf.isAngry()).thenReturn(true);
-
-        testResolution(untamedWolf, Relation.PASSIVE);
-        testResolution(angryUntamedWolf, Relation.HOSTILE);
+    public void horseRiddenByPlayerTest() {
+        testResolution(horseRiddenByPlayer, Relation.IGNORED);
     }
 
     @Test
-    public void testWolfOwnedByOther() {
-        Wolf tamedWolf = mock(Wolf.class);
-        Entity owner = mock(Entity.class);
-
-        when(tamedWolf.isTamed()).thenReturn(true);
-        when(tamedWolf.getOwner()).thenReturn(owner);
-
+    public void horseRiddenByOtherNestedResolve() {
         ResolutionCallback callback = resolver
                 .resolveRelation(ResolveRequest
-                        .anonymous(tamedWolf, dummyContext));
+                        .anonymous(horseRiddenByOther, DUMMY_CONTEXT));
 
         assertEquals(callback.getType(), ResolutionCallbackType.NESTED_RESOLVE);
-        assertEquals(callback.getNestedResolveTarget(), owner);
-    }
-
-    @Test
-    public void testOwnedWolf() {
-        Wolf ownedWolf = mock(Wolf.class);
-        UUID playerId = player.getUniqueID();
-
-        when(ownedWolf.isTamed()).thenReturn(true);
-        when(ownedWolf.getOwnerId()).thenReturn(playerId);
-
-        testResolution(ownedWolf, Relation.FRIENDLY);
-    }
-
-    @Test(expected = ClassCastException.class)
-    public void testFailedResolve() {
-        Boat boat = mock(Boat.class);
-
-        resolve(boat);
+        assertEquals(callback.getNestedResolveTarget(), otherRider);
     }
 
     @Test
     public void canResolveTrueTest() {
-        assertTrue(resolver.canResolve(Tamable.class));
-        assertTrue(resolver.canResolve(Wolf.class));
+        assertTrue(resolver.canResolve(Horse.class));
     }
 
     @Test
     public void canResolveFalseTest() {
         assertFalse(resolver.canResolve(Animal.class));
         assertFalse(resolver.canResolve(Player.class));
-        assertFalse(resolver.canResolve(Horse.class));
         assertFalse(resolver.canResolve(Monster.class));
         assertFalse(resolver.canResolve(ZombiePigman.class));
+        assertFalse(resolver.canResolve(Tamable.class));
+        assertFalse(resolver.canResolve(Wolf.class));
     }
 
-    @Ignore
     @Override
     protected RelationResolver supplyResolver() {
-        return new TamableRelationResolver(() -> player);
+        return new HorseRelationResolver(() -> player);
     }
 }

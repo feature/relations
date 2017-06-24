@@ -19,67 +19,54 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package pw.stamina.plugin.relations.resolvers;
+package pw.stamina.plugin.relations.resolvers.impl.wildcard;
 
-import org.junit.Ignore;
 import org.junit.Test;
+import pw.stamina.minecraftapi.entity.animal.Animal;
 import pw.stamina.minecraftapi.entity.animal.Horse;
 import pw.stamina.minecraftapi.entity.animal.Tamable;
 import pw.stamina.minecraftapi.entity.animal.Wolf;
-import pw.stamina.minecraftapi.entity.living.Golem;
 import pw.stamina.minecraftapi.entity.living.Player;
 import pw.stamina.minecraftapi.entity.monster.Monster;
 import pw.stamina.minecraftapi.entity.monster.ZombiePigman;
 import pw.stamina.plugin.relations.Relation;
-import pw.stamina.plugin.relations.resolvers.impl.ZombiePigmanRelationResolver;
+import pw.stamina.plugin.relations.resolvers.RelationResolver;
+import pw.stamina.plugin.relations.resolvers.impl.AbstractRelationResolverTest;
+import pw.stamina.plugin.relations.resolvers.impl.wildcard.MonsterWildcardRelationResolver;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
-public final class ZombiePigmanRelationResolverTest
+public final class MonsterWildcardRelationResolverTest
         extends AbstractRelationResolverTest {
 
     @Test
-    public void resolveRelationNeutralZombiePigmanTest() {
+    public void resolveRelationSuccessTest() {
+        Monster monster = mock(Monster.class);
         ZombiePigman zombiePigman = mock(ZombiePigman.class);
 
-        testResolution(zombiePigman, Relation.NEUTRAL);
-    }
-
-    @Test
-    public void resolveRelationAngryZombiePigmanTest() {
-        ZombiePigman angryZombiePigman = mock(ZombiePigman.class);
-        when(angryZombiePigman.isAngry()).thenReturn(true);
-
-        testResolution(angryZombiePigman, Relation.HOSTILE);
-    }
-
-    @Test(expected = ClassCastException.class)
-    public void resolveRelationFailTest() {
-        Player player = mock(Player.class);
-
-        resolve(player);
+        testResolution(monster, Relation.HOSTILE);
+        testResolution(zombiePigman, Relation.HOSTILE);
     }
 
     @Test
     public void canResolveTrueTest() {
+        assertTrue(resolver.canResolve(Monster.class));
         assertTrue(resolver.canResolve(ZombiePigman.class));
     }
 
     @Test
     public void canResolveFalseTest() {
+        assertFalse(resolver.canResolve(Player.class));
+        assertFalse(resolver.canResolve(Animal.class));
         assertFalse(resolver.canResolve(Tamable.class));
         assertFalse(resolver.canResolve(Wolf.class));
         assertFalse(resolver.canResolve(Horse.class));
-        assertFalse(resolver.canResolve(Player.class));
-        assertFalse(resolver.canResolve(Monster.class));
-        assertFalse(resolver.canResolve(Golem.class));
     }
 
-    @Ignore
     @Override
     protected RelationResolver supplyResolver() {
-        return new ZombiePigmanRelationResolver();
+        return new MonsterWildcardRelationResolver();
     }
 }

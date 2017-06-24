@@ -22,71 +22,53 @@
 package pw.stamina.plugin.relations;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 
-import java.util.stream.Stream;
+import java.util.Arrays;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
+@RunWith(Parameterized.class)
 public final class ResolutionContextTest {
 
-    @Test
-    public void getInstanceAttackConstantTest() {
-        String[] inputs = new String[]{
-                "attack",
-                "aTtAcK",
-                "AtTaCk",
-                "AtTaCk"};
+    @Parameters(name = "ResolutionContext.getInstance({0}) == {1}")
+    public static Iterable<Object[]> data() {
+        return Arrays.asList(new Object[][]{
+                {"attack", ResolutionContext.ATTACK},
+                {"aTtAcK", ResolutionContext.ATTACK},
+                {"AtTaCk", ResolutionContext.ATTACK},
+                {"AtTaCk", ResolutionContext.ATTACK},
 
-        Stream.of(inputs).forEach(input ->
-                assertEquals(String.format("'%s' did not resolve to the correct" +
-                                "ATTACK ReoslutionContext instance", input),
-                        ResolutionContext.ATTACK,
-                        ResolutionContext.getInstance(input)));
+                {"render", ResolutionContext.RENDER},
+                {"rEnDeR", ResolutionContext.RENDER},
+                {"ReNdEr", ResolutionContext.RENDER},
+                {"RENDER", ResolutionContext.RENDER},
+
+                {"test", TEST_CONTEXT},
+                {"tEsT", TEST_CONTEXT},
+                {"TeSt", TEST_CONTEXT},
+                {"TEST", TEST_CONTEXT},
+        });
+    }
+
+    private static final ResolutionContext TEST_CONTEXT = ResolutionContext.getInstance("test");
+
+    private final String input;
+    private final ResolutionContext expected;
+
+    public ResolutionContextTest(String input,
+                                 ResolutionContext expected) {
+        this.input = input;
+        this.expected = expected;
     }
 
     @Test
-    public void getInstanceRenderConstantTest() {
-        String[] inputs = new String[]{
-                "render",
-                "rEnDeR",
-                "ReNdEr",
-                "RENDER"};
+    public void getInstance_knownNonNullInput_shouldReturnExpectedValueFromString() {
+        ResolutionContext context = ResolutionContext.getInstance(input);
 
-        Stream.of(inputs).forEach(input ->
-                assertEquals(String.format("'%s' did not resolve to the correct" +
-                                "RENDER ReoslutionContext instance", input),
-                        ResolutionContext.RENDER,
-                        ResolutionContext.getInstance(input)));
-    }
-
-    @Test
-    public void getInstanceNewContextTest() {
-        ResolutionContext testContext = ResolutionContext.getInstance("test");
-
-        String[] inputs = new String[]{
-                "test",
-                "tEsT",
-                "TeSt",
-                "TEST"};
-
-        Stream.of(inputs).forEach(input ->
-                assertEquals(String.format("'%s' did not resolve to the correct" +
-                                "test ReoslutionContext instance", input),
-                        testContext, ResolutionContext.getInstance(input)));
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void getInstanceEmptyInputFailTest() {
-        ResolutionContext.getInstance("");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void getInstanceEmptyTrimmedInputFailTest() {
-        ResolutionContext.getInstance("   ");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void getInstanceNullInputFailTest() {
-        ResolutionContext.getInstance(null);
+        assertThat(context, is(expected));
     }
 }

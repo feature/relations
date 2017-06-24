@@ -21,18 +21,23 @@
 
 package pw.stamina.plugin.relations;
 
-import com.google.common.base.Strings;
-
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * This class defines the context for when a
- * {@link Relation} is requested to be resolved.
+ * A {@code ResolutionContext} defines the context in which a
+ * {@link Relation} is being resolved. This class provides two
+ * common default contexts, {@link #ATTACK} and {@link #RENDER}.
+ * <p>
  *
- * This class is instance controlled using the
- * {@link #getInstance(String)} method.
+ * If you want to create your own context, you may do so by using
+ * the {@link #getInstance(String) getInstance} method. Names are
+ * case insensitive, meaning {@literal test} and {@literal TEST} will
+ * return the exact same context object.
+ *
+ * @implSpec this class is instance controlled using the {@link #getInstance(String)} method
  */
 public final class ResolutionContext {
     private static final Map<String, ResolutionContext>
@@ -56,7 +61,7 @@ public final class ResolutionContext {
     }
 
     /**
-     * Returns the <tt>name</tt> of this context.
+     * Returns the {@code name} of this context.
      *
      * @return the name of this context
      */
@@ -70,17 +75,15 @@ public final class ResolutionContext {
     }
 
     //TODO: Javadoc
-    public static ResolutionContext getInstance(String name) {
-        if (Strings.nullToEmpty(name).trim().isEmpty()) {
-            throw new IllegalArgumentException(
-                    "name must not be null or empty");
-        }
+    public static ResolutionContext getInstance(String name)
+            throws IllegalArgumentException {
+        Objects.requireNonNull(name, "name");
 
         name = normalizeName(name);
         return INSTANCES.computeIfAbsent(name, ResolutionContext::new);
     }
 
     private static String normalizeName(String name) {
-        return name.toLowerCase(Locale.ROOT);
+        return name.trim().toLowerCase(Locale.ROOT);
     }
 }

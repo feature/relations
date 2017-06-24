@@ -27,46 +27,31 @@ import pw.stamina.minecraftapi.entity.Entity;
 import pw.stamina.minecraftapi.entity.item.Boat;
 import pw.stamina.minecraftapi.entity.item.Minecart;
 import pw.stamina.minecraftapi.entity.living.Player;
-import pw.stamina.plugin.relations.Relation;
 import pw.stamina.plugin.relations.request.ResolveRequest;
-import pw.stamina.plugin.relations.resolvers.AbstractRelationResolver;
 import pw.stamina.plugin.relations.result.ResolutionCallback;
 
-import static pw.stamina.plugin.relations.result.ResolutionCallback.*;
+import static pw.stamina.plugin.relations.result.ResolutionCallback.failed;
 
 //TODO: Javadoc
-public final class VehicleRelationResolver
-        extends AbstractRelationResolver {
-    private final Provider<Player> localPlayerProvider;
+final class VehicleRelationResolver
+        extends AbstractRiddenEntityRelationResolver {
 
     @Inject
     public VehicleRelationResolver(Provider<Player> localPlayerProvider) {
-        this.localPlayerProvider = localPlayerProvider;
+        super(localPlayerProvider);
     }
 
     @Override
-    public ResolutionCallback resolveRelation(ResolveRequest request) {
-        Entity rider = request.entity().getRider();
-
-        if (rider == null) {
-            return failed();
-        }
-
-        if (isRiderLocalPlayer(rider)) {
-            return success(Relation.IGNORED);
-        } else {
-            return nestedResolve(rider);
-        }
-    }
-
-    private boolean isRiderLocalPlayer(Entity rider) {
-        Player localPlayer = localPlayerProvider.get();
-
-        return rider == localPlayer;
+    protected ResolutionCallback resolveUnriddenEntity(ResolveRequest request) {
+        return failed();
     }
 
     @Override
     public boolean canResolve(Class<? extends Entity> entityType) {
+        return isEntityVehicle(entityType);
+    }
+
+    private boolean isEntityVehicle(Class<? extends Entity> entityType) {
         return Boat.class.isAssignableFrom(entityType)
                 || Minecart.class.isAssignableFrom(entityType);
     }

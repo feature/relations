@@ -19,23 +19,29 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package pw.stamina.plugin.relations;
+package pw.stamina.plugin.relations.resolvers.impl;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import pw.stamina.plugin.relations.resolvers.*;
+import pw.stamina.minecraftapi.entity.Entity;
+import pw.stamina.plugin.relations.Relation;
+import pw.stamina.plugin.relations.ResolutionContext;
+import pw.stamina.plugin.relations.request.ResolveRequest;
+import pw.stamina.plugin.relations.resolvers.RelationResolver;
+import pw.stamina.plugin.relations.result.ResolutionCallback;
 
-@RunWith(Suite.class)
-@Suite.SuiteClasses({
-        EndermanRelationResolverTest.class,
-        GolemRelationResolverTest.class,
-        HorseRelationResolverTest.class,
-        TamableRelationResolverTest.class,
-        VehicleRelationResolverTest.class,
-        ZombiePigmanRelationResolverTest.class,
+import static org.junit.Assert.assertSame;
 
-        AnimalWildcardRelationResolverTest.class,
-        MonsterWildcardRelationResolverTest.class,
-        PlayerRelationResolverTest.class
-})
-public class RelationResolverTestSuite {}
+public abstract class AbstractRelationResolverTest {
+    protected final RelationResolver resolver = supplyResolver();
+    protected static final ResolutionContext DUMMY_CONTEXT
+            = ResolutionContext.getInstance("dummy");
+
+    protected final void testResolution(Entity entity, Relation expectedRelation) {
+        assertSame(expectedRelation, resolve(entity).getResult());
+    }
+
+    protected final ResolutionCallback resolve(Entity entity) {
+        return resolver.resolveRelation(ResolveRequest.anonymous(entity, DUMMY_CONTEXT));
+    }
+
+    protected abstract RelationResolver supplyResolver();
+}

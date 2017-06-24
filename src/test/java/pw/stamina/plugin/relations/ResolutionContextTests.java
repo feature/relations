@@ -19,29 +19,33 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package pw.stamina.plugin.relations.resolvers.impl.wildcard;
+package pw.stamina.plugin.relations;
 
-import pw.stamina.minecraftapi.entity.Entity;
-import pw.stamina.minecraftapi.entity.animal.Animal;
-import pw.stamina.minecraftapi.entity.monster.Monster;
-import pw.stamina.plugin.relations.Relation;
-import pw.stamina.plugin.relations.request.ResolveRequest;
-import pw.stamina.plugin.relations.result.ResolutionCallback;
+import org.junit.Assert;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
-import static pw.stamina.plugin.relations.result.ResolutionCallback.success;
+import static org.hamcrest.Matchers.equalToIgnoringCase;
 
-//TODO: Javadoc
-final class AnimalWildcardRelationResolver
-        extends WildcardRelationResolver {
+public final class ResolutionContextTests {
 
-    @Override
-    public ResolutionCallback resolveRelation(ResolveRequest request) {
-        return success(Relation.PASSIVE);
+    @Rule
+    public final ExpectedException thrown = ExpectedException.none();
+
+    @Test
+    public void name_shouldReturnSameValueAsSpecified() {
+        String name = "dummy";
+
+        ResolutionContext context = ResolutionContext.getInstance(name);
+        Assert.assertThat(context.name(), equalToIgnoringCase(name));
     }
 
-    @Override
-    public boolean canResolve(Class<? extends Entity> entityType) {
-        return Animal.class.isAssignableFrom(entityType)
-                && !Monster.class.isAssignableFrom(entityType);
+    @Test
+    public void getInstanceNullInputFailTest() {
+        thrown.expect(NullPointerException.class);
+        thrown.expectMessage("name");
+
+        ResolutionContext.getInstance(null);
     }
 }

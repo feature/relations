@@ -19,53 +19,83 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package pw.stamina.plugin.relations.resolvers;
+package pw.stamina.plugin.relations.resolvers.impl;
 
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import pw.stamina.minecraftapi.entity.animal.Animal;
 import pw.stamina.minecraftapi.entity.animal.Horse;
 import pw.stamina.minecraftapi.entity.animal.Tamable;
 import pw.stamina.minecraftapi.entity.animal.Wolf;
+import pw.stamina.minecraftapi.entity.item.Boat;
+import pw.stamina.minecraftapi.entity.item.Minecart;
 import pw.stamina.minecraftapi.entity.living.Player;
 import pw.stamina.minecraftapi.entity.monster.Monster;
 import pw.stamina.minecraftapi.entity.monster.ZombiePigman;
 import pw.stamina.plugin.relations.Relation;
-import pw.stamina.plugin.relations.resolvers.impl.wildcard.AnimalWildcardRelationResolver;
+import pw.stamina.plugin.relations.resolvers.RelationResolver;
+import pw.stamina.plugin.relations.result.ResolutionCallback;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-public final class AnimalWildcardRelationResolverTest
+@RunWith(MockitoJUnitRunner.class)
+public final class VehicleRelationResolverTest
         extends AbstractRelationResolverTest {
+    @Mock
+    private Player player;
 
-    @Test
-    public void resolveRelationSuccessTest() {
-        Wolf wolf = mock(Wolf.class);
-        Horse horse = mock(Horse.class);
+    @Mock
+    private Boat boatRiddenByPlayer;
+    @Mock
+    private Minecart minecartRiddenByPlayer;
 
-        testResolution(wolf, Relation.PASSIVE);
-        testResolution(horse, Relation.PASSIVE);
+    @Before
+    public void setupPlayerRiddenVehicles() {
+        when(boatRiddenByPlayer.getRider()).thenReturn(player);
+        when(minecartRiddenByPlayer.getRider()).thenReturn(player);
     }
 
     @Test
     public void canResolveTrueTest() {
-        assertTrue(resolver.canResolve(Animal.class));
-        assertTrue(resolver.canResolve(Tamable.class));
-        assertTrue(resolver.canResolve(Wolf.class));
-        assertTrue(resolver.canResolve(Horse.class));
+        assertTrue(resolver.canResolve(Boat.class));
+        assertTrue(resolver.canResolve(Minecart.class));
+    }
+
+    @Test
+    public void resolveRelationRiddenByPlayer() {
+        testResolution(boatRiddenByPlayer, Relation.IGNORED);
+        testResolution(minecartRiddenByPlayer, Relation.IGNORED);
+    }
+
+    @Test
+    public void resolveRelationNotRidden() {
+        Boat boat = mock(Boat.class);
+        Minecart minecart = mock(Minecart.class);
+
+        assertSame(resolve(boat), ResolutionCallback.failed());
+        assertSame(resolve(minecart), ResolutionCallback.failed());
     }
 
     @Test
     public void canResolveFalseTest() {
+        assertFalse(resolver.canResolve(Animal.class));
+        assertFalse(resolver.canResolve(Horse.class));
         assertFalse(resolver.canResolve(Player.class));
         assertFalse(resolver.canResolve(Monster.class));
         assertFalse(resolver.canResolve(ZombiePigman.class));
+        assertFalse(resolver.canResolve(Tamable.class));
+        assertFalse(resolver.canResolve(Wolf.class));
     }
 
     @Ignore
     @Override
     protected RelationResolver supplyResolver() {
-        return new AnimalWildcardRelationResolver();
+        return new VehicleRelationResolver(() -> player);
     }
 }

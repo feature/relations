@@ -26,11 +26,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * An enum of entity relations. A relation
- * indicates how supported systems should
- * treat entities.
+ * A relation is an entity classification, which indicates
+ * how an entity generally should be treated.
  */
-//TODO: Consider migrating like we did with ResolutionContext?
 public enum Relation {
     /**
      * The entity is considered friendly.
@@ -69,8 +67,9 @@ public enum Relation {
      */
     IGNORED,
     /**
-     * No resolver was able to identify the relation
-     * to the entity.
+     * A suitable relation was unable to be found for
+     * the specific entity. Generally entities with
+     * this relation should be ignored.
      */
     UNRECOGNIZED;
 

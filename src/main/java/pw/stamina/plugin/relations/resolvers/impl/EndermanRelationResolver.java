@@ -31,16 +31,18 @@ import pw.stamina.plugin.relations.result.ResolutionCallback;
 import static pw.stamina.plugin.relations.result.ResolutionCallback.success;
 
 //TODO: Javadoc
-public final class EndermanRelationResolver
+final class EndermanRelationResolver
         extends AbstractRelationResolver {
 
     @Override
     public ResolutionCallback resolveRelation(ResolveRequest request) {
         Enderman enderman = (Enderman) request.entity();
 
-        return success(isEndermanHostile(enderman)
-                ? Relation.HOSTILE
-                : Relation.NEUTRAL);
+        if (isEndermanHostile(enderman)) {
+            return success(Relation.HOSTILE);
+        } else {
+            return success(Relation.NEUTRAL);
+        }
     }
 
     private boolean isEndermanHostile(Enderman enderman) {

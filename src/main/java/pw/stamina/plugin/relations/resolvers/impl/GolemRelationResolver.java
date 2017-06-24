@@ -32,7 +32,7 @@ import pw.stamina.plugin.relations.result.ResolutionCallback;
 import static pw.stamina.plugin.relations.result.ResolutionCallback.success;
 
 //TODO: Javadoc
-public final class GolemRelationResolver
+final class GolemRelationResolver
         extends AbstractRelationResolver {
 
     @Override
@@ -42,7 +42,9 @@ public final class GolemRelationResolver
         if (golem instanceof IronGolem) {
             IronGolem ironGolem = (IronGolem) golem;
 
-            if (isIronGolemNeutral(ironGolem)) {
+            if (isIronGolemPassive(ironGolem)) {
+                return success(Relation.PASSIVE);
+            } else {
                 return success(Relation.NEUTRAL);
             }
         }
@@ -50,7 +52,7 @@ public final class GolemRelationResolver
         return success(Relation.PASSIVE);
     }
 
-    private boolean isIronGolemNeutral(IronGolem ironGolem) {
+    private boolean isIronGolemPassive(IronGolem ironGolem) {
         return ironGolem.isPlayerCreated();
     }
 

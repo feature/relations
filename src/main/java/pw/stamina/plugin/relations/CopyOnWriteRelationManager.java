@@ -24,7 +24,6 @@ package pw.stamina.plugin.relations;
 import com.google.inject.Inject;
 import pw.stamina.minecraftapi.entity.Entity;
 import pw.stamina.plugin.relations.request.ResolveRequest;
-import pw.stamina.plugin.relations.resolvers.DefaultResolvers;
 import pw.stamina.plugin.relations.resolvers.RelationResolver;
 import pw.stamina.plugin.relations.select.RelationSelectorService;
 
@@ -53,8 +52,7 @@ public final class CopyOnWriteRelationManager
      */
     @Inject
     public CopyOnWriteRelationManager(
-            @DefaultResolvers
-                    Set<RelationResolver> defaultResolvers,
+            Set<RelationResolver> defaultResolvers,
             RelationSelectorService selectorService) {
         Objects.requireNonNull(selectorService, "selectorService");
 

@@ -30,7 +30,7 @@ import pw.stamina.plugin.relations.result.ResolutionCallback;
 import static pw.stamina.plugin.relations.result.ResolutionCallback.success;
 
 //TODO: Javadoc
-public final class MonsterWildcardRelationResolver
+final class MonsterWildcardRelationResolver
         extends WildcardRelationResolver {
 
     @Override

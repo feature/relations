@@ -25,7 +25,7 @@ import pw.stamina.plugin.relations.resolvers.AbstractRelationResolver;
 import pw.stamina.plugin.relations.resolvers.Priority;
 
 //TODO: Javadoc
-public abstract class WildcardRelationResolver
+abstract class WildcardRelationResolver
         extends AbstractRelationResolver {
 
     @Override

@@ -21,7 +21,7 @@
 
 package pw.stamina.plugin.relations.request;
 
-import com.google.common.base.Strings;
+import pw.stamina.euclid.traits.Named;
 import pw.stamina.minecraftapi.entity.Entity;
 import pw.stamina.plugin.relations.ResolutionContext;
 import pw.stamina.plugin.relations.ResolvedRelationProcessor;
@@ -38,7 +38,7 @@ public interface ResolveRequest {
 
     ResolutionContext context();
 
-    Optional<String> requester();
+    Optional<Named> requester();
 
     CompleteResolveRequest complete(List<RelationResolver> resolvers,
                                     List<ResolvedRelationProcessor> processors);
@@ -52,14 +52,10 @@ public interface ResolveRequest {
 
     static ResolveRequest identified(Entity entity,
                                      ResolutionContext context,
-                                     String requester) {
+                                     Named requester) {
         Objects.requireNonNull(entity, "entity");
         Objects.requireNonNull(context, "context");
-
-        if (Strings.nullToEmpty(requester).trim().isEmpty()) {
-            throw new IllegalArgumentException(
-                    "request must not be null or empty");
-        }
+        Objects.requireNonNull(requester, "requester");
 
         return new SimpleResolveRequest(entity, context, requester);
     }

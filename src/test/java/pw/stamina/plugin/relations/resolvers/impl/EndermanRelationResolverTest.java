@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package pw.stamina.plugin.relations.resolvers;
+package pw.stamina.plugin.relations.resolvers.impl;
 
 import org.junit.Test;
 import pw.stamina.minecraftapi.entity.animal.Horse;
@@ -30,7 +30,7 @@ import pw.stamina.minecraftapi.entity.monster.Enderman;
 import pw.stamina.minecraftapi.entity.monster.Monster;
 import pw.stamina.minecraftapi.entity.monster.ZombiePigman;
 import pw.stamina.plugin.relations.Relation;
-import pw.stamina.plugin.relations.resolvers.impl.EndermanRelationResolver;
+import pw.stamina.plugin.relations.resolvers.RelationResolver;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;

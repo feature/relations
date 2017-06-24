@@ -19,45 +19,21 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package pw.stamina.plugin.relations;
+package pw.stamina.plugin.relations.resolvers.impl;
 
-import com.google.auto.service.AutoService;
 import com.google.inject.AbstractModule;
-import com.google.inject.Module;
-import com.google.inject.Singleton;
 import com.google.inject.multibindings.Multibinder;
-import pw.stamina.plugin.relations.resolvers.DefaultResolvers;
 import pw.stamina.plugin.relations.resolvers.RelationResolver;
-import pw.stamina.plugin.relations.resolvers.impl.*;
-import pw.stamina.plugin.relations.resolvers.impl.wildcard.AnimalWildcardRelationResolver;
-import pw.stamina.plugin.relations.resolvers.impl.wildcard.MonsterWildcardRelationResolver;
-import pw.stamina.plugin.relations.resolvers.impl.PlayerRelationResolver;
-import pw.stamina.plugin.relations.select.CachingRelationSelectorService;
-import pw.stamina.plugin.relations.select.RelationSelectorService;
 
 import java.util.stream.Stream;
 
-//TODO: Javadoc
-@AutoService(Module.class)
-public final class RelationsModule extends AbstractModule {
+public final class StandardRelationResolversModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(RelationManager.class)
-                .to(CopyOnWriteRelationManager.class)
-                .in(Singleton.class);
-
-        bind(RelationSelectorService.class)
-                .to(CachingRelationSelectorService.class);
-
-        bindDefaultResolvers();
-    }
-
-    private void bindDefaultResolvers() {
         Multibinder<RelationResolver> defaultResolversBinder =
                 Multibinder.newSetBinder(binder(),
-                        RelationResolver.class,
-                        DefaultResolvers.class);
+                        RelationResolver.class);
 
         Stream.of(
                 EndermanRelationResolver.class,
@@ -66,10 +42,7 @@ public final class RelationsModule extends AbstractModule {
                 PlayerRelationResolver.class,
                 TamableRelationResolver.class,
                 VehicleRelationResolver.class,
-                ZombiePigmanRelationResolver.class,
-
-                AnimalWildcardRelationResolver.class,
-                MonsterWildcardRelationResolver.class
+                ZombiePigmanRelationResolver.class
         ).forEach(resolver -> defaultResolversBinder.addBinding().to(resolver));
     }
 }

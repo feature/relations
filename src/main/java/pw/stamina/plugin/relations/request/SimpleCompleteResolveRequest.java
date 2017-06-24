@@ -35,8 +35,8 @@ final class SimpleCompleteResolveRequest
     private final List<ResolvedRelationProcessor> processors;
 
     SimpleCompleteResolveRequest(ResolveRequest request,
-                                        List<RelationResolver> resolvers,
-                                        List<ResolvedRelationProcessor> processors) {
+                                 List<RelationResolver> resolvers,
+                                 List<ResolvedRelationProcessor> processors) {
         this.request = request;
         this.resolvers = resolvers;
         this.processors = processors;
