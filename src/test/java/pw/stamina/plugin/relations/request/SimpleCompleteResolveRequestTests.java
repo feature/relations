@@ -21,41 +21,47 @@
 
 package pw.stamina.plugin.relations.request;
 
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import pw.stamina.plugin.relations.ResolvedRelationProcessor;
 import pw.stamina.plugin.relations.resolvers.RelationResolver;
 
+import java.util.Collections;
 import java.util.List;
 
-//TODO: Javadoc
-//#resolvers and #processors are not wrapped in an unmodifiable decoration,
-// as it is expected to be instantiated with unmodifiable lists.
-final class SimpleCompleteResolveRequest
-        implements CompleteResolveRequest {
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
-    private final ResolveRequest request;
-    private final List<RelationResolver> resolvers;
-    private final List<ResolvedRelationProcessor> processors;
+@RunWith(MockitoJUnitRunner.class)
+public final class SimpleCompleteResolveRequestTests {
 
-    SimpleCompleteResolveRequest(ResolveRequest request,
-                                 List<RelationResolver> resolvers,
-                                 List<ResolvedRelationProcessor> processors) {
-        this.request = request;
-        this.resolvers = resolvers;
-        this.processors = processors;
+    @Mock private ResolveRequest request;
+    private List<RelationResolver> resolvers = Collections.emptyList();
+    private List<ResolvedRelationProcessor> processors = Collections.emptyList();
+
+    private SimpleCompleteResolveRequest completeRequest;
+
+    @Before
+    public void setupCompleteRequest() {
+        completeRequest = new SimpleCompleteResolveRequest(
+                request, resolvers, processors);
     }
 
-    @Override
-    public ResolveRequest request() {
-        return request;
+    @Test
+    public void request_shouldReturnSameAsRequestSpecifiedInConstructor() {
+        assertThat(completeRequest.request(), is(request));
     }
 
-    @Override
-    public List<RelationResolver> resolvers() {
-        return resolvers;
+    @Test
+    public void resolvers_shouldReturnSameAsResolversSpecifiedInConstructor() {
+        assertThat(completeRequest.resolvers(), is(resolvers));
     }
 
-    @Override
-    public List<ResolvedRelationProcessor> processors() {
-        return processors;
+    @Test
+    public void processors_shouldReturnSameAsProcessorsSpecifiedInConstructor() {
+        assertThat(completeRequest.processors(), is(processors));
     }
 }
