@@ -32,6 +32,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 @RunWith(Parameterized.class)
+//TODO: Rename to a more accurate test name
 public final class ResolutionContextTest {
 
     @Parameters(name = "ResolutionContext.getInstance({0}) == {1}")

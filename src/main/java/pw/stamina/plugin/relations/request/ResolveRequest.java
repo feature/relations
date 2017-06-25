@@ -38,7 +38,7 @@ public interface ResolveRequest {
 
     ResolutionContext context();
 
-    Optional<Named> requester();
+    Optional<String> requester();
 
     CompleteResolveRequest complete(List<RelationResolver> resolvers,
                                     List<ResolvedRelationProcessor> processors);
@@ -57,6 +57,6 @@ public interface ResolveRequest {
         Objects.requireNonNull(context, "context");
         Objects.requireNonNull(requester, "requester");
 
-        return new SimpleResolveRequest(entity, context, requester);
+        return new SimpleResolveRequest(entity, context, requester.getName());
     }
 }

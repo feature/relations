@@ -21,7 +21,6 @@
 
 package pw.stamina.plugin.relations.request;
 
-import pw.stamina.euclid.traits.Named;
 import pw.stamina.minecraftapi.entity.Entity;
 import pw.stamina.plugin.relations.ResolutionContext;
 import pw.stamina.plugin.relations.ResolvedRelationProcessor;
@@ -35,11 +34,11 @@ import java.util.Optional;
 final class SimpleResolveRequest implements ResolveRequest {
     private final Entity entity;
     private final ResolutionContext context;
-    private final Named requester;
+    private final String requester;
 
     SimpleResolveRequest(Entity entity,
                          ResolutionContext context,
-                         Named requester) {
+                         String requester) {
         this.entity = entity;
         this.context = context;
         this.requester = requester;
@@ -56,7 +55,7 @@ final class SimpleResolveRequest implements ResolveRequest {
     }
 
     @Override
-    public Optional<Named> requester() {
+    public Optional<String> requester() {
         return Optional.ofNullable(requester);
     }
 

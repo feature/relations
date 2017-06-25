@@ -19,33 +19,56 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package pw.stamina.plugin.relations;
+package pw.stamina.plugin.relations.request;
 
-import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import pw.stamina.plugin.relations.ResolvedRelationProcessor;
+import pw.stamina.plugin.relations.resolvers.RelationResolver;
 
-import static org.hamcrest.Matchers.equalToIgnoringCase;
+import java.util.Collections;
+import java.util.List;
 
-public final class ResolutionContextTests {
+import static org.hamcrest.CoreMatchers.isA;
+import static org.junit.Assert.assertThat;
+
+public final class SimpleResolveRequestCompleteTests {
 
     @Rule
     public final ExpectedException thrown = ExpectedException.none();
 
-    @Test
-    public void name_shouldReturnSameValueAsSpecified() {
-        String name = "dummy";
+    private SimpleResolveRequest request;
 
-        ResolutionContext context = ResolutionContext.getInstance(name);
-        Assert.assertThat(context.name(), equalToIgnoringCase(name));
+    private List<RelationResolver> resolvers = Collections.emptyList();
+    private List<ResolvedRelationProcessor> processors = Collections.emptyList();
+
+    @Before
+    public void setupRequest() {
+        request = new SimpleResolveRequest(null, null, null);
     }
 
     @Test
-    public void getInstance_nullInput_shouldThrowException() {
+    public void complete_resolversNullInput_shouldThrowException() {
         thrown.expect(NullPointerException.class);
-        thrown.expectMessage("name");
+        thrown.expectMessage("resolvers");
 
-        ResolutionContext.getInstance(null);
+        request.complete(null, processors);
+    }
+
+    @Test
+    public void complete_processorsNullInput_shouldThrowException() {
+        thrown.expect(NullPointerException.class);
+        thrown.expectMessage("processors");
+
+        request.complete(resolvers, null);
+    }
+
+    @Test
+    public void complete_validNonNullInputs_shouldCreateCompleteResolveRequest() {
+        CompleteResolveRequest complete = request.complete(resolvers, processors);
+
+        assertThat(complete, isA(CompleteResolveRequest.class));
     }
 }

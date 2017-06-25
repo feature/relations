@@ -22,7 +22,9 @@
 package pw.stamina.plugin.relations.request;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -34,73 +36,76 @@ import pw.stamina.plugin.relations.ResolutionContext;
 import java.util.Optional;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
-public final class ResolveRequestTest {
+public final class ResolveRequestTests {
 
-    @Mock
-    private Entity entity;
+    @Rule
+    public final ExpectedException thrown = ExpectedException.none();
 
     private static final ResolutionContext DUMMY_CONTEXT =
             ResolutionContext.getInstance("dummy");
 
-    @Mock
-    private Named requester;
+    @Mock private Entity entity;
+    @Mock private Named requester;
 
     @Before
     public void setupRequester() {
-        Mockito.when(requester.getName()).thenReturn("dummy_requester");
+        Mockito.when(requester.getName()).thenReturn("mocked_requester");
     }
 
     @Test
-    public void assertAnonymousAndIdentifiedAreSameImplementationTest() {
-        ResolveRequest anonymous = ResolveRequest.anonymous(entity, DUMMY_CONTEXT);
-        ResolveRequest identified = ResolveRequest.identified(entity, DUMMY_CONTEXT, requester);
+    public void anonymous_entityNullInput_shouldThrowException() {
+        thrown.expect(NullPointerException.class);
+        thrown.expectMessage("entity");
 
-        assertSame(anonymous.getClass(), identified.getClass());
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void anonymousEntityNullInputTest() {
         ResolveRequest.anonymous(null, DUMMY_CONTEXT);
     }
 
-    @Test(expected = NullPointerException.class)
-    public void anonymousContextNullInputTest() {
+    @Test
+    public void anonymous_contextNullInput_shouldThrowException() {
+        thrown.expect(NullPointerException.class);
+        thrown.expectMessage("context");
+
         ResolveRequest.anonymous(entity, null);
     }
 
-    @Test(expected = NullPointerException.class)
-    public void identifiedEntityNullInputTest() {
+    @Test
+    public void identified_entityNullInput_shouldThrowException() {
+        thrown.expect(NullPointerException.class);
+        thrown.expectMessage("entity");
+
         ResolveRequest.identified(null, DUMMY_CONTEXT, requester);
     }
 
-    @Test(expected = NullPointerException.class)
-    public void identifiedContextNullInputTest() {
-        System.out.println(requester);
-        System.out.println(requester.getName());
+    @Test
+    public void identified_contextNullInput_shouldThrowException() {
+        thrown.expect(NullPointerException.class);
+        thrown.expectMessage("context");
+
         ResolveRequest.identified(entity, null, requester);
     }
 
-    @Test(expected = NullPointerException.class)
-    public void identifiedRequesterNullInputTest() {
+    @Test
+    public void identified_requesterNullInput_shouldThrowException() {
+        thrown.expect(NullPointerException.class);
+        thrown.expectMessage("requester");
+
         ResolveRequest.identified(entity, DUMMY_CONTEXT, null);
     }
 
     @Test
-    public void assertAnonymousRequestIsEmptyOptional() {
+    public void anonymous_validArguments_shouldReturnResolveRequestWithNoRequester() {
         ResolveRequest request = ResolveRequest.anonymous(entity, DUMMY_CONTEXT);
 
         assertThat(request.requester(), is(Optional.empty()));
     }
 
     @Test
-    public void assertIdentifiedRequestIsSameAsSpecifiedRequesterTest() {
+    public void identified_validArguments_shouldReturnResolveRequestRequesterSameAsSpecifiedRequesterName() {
         ResolveRequest request = ResolveRequest.identified(entity, DUMMY_CONTEXT, requester);
-        Named requester = request.requester().get();
 
-        assertThat(requester, is(this.requester));
+        assertThat(request.requester().get(), is(requester.getName()));
     }
 }
