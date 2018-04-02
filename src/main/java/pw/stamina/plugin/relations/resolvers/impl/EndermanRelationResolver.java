@@ -10,22 +10,17 @@ import pw.stamina.plugin.relations.result.ResolutionCallback;
 import static pw.stamina.plugin.relations.result.ResolutionCallback.success;
 
 //TODO: Javadoc
-final class EndermanRelationResolver
-        extends AbstractRelationResolver {
+final class EndermanRelationResolver extends AbstractRelationResolver {
 
     @Override
     public ResolutionCallback resolveRelation(ResolveRequest request) {
         Enderman enderman = (Enderman) request.entity();
 
-        if (isEndermanHostile(enderman)) {
+        if (enderman.isScreaming()) {
             return success(Relation.HOSTILE);
         } else {
             return success(Relation.NEUTRAL);
         }
-    }
-
-    private boolean isEndermanHostile(Enderman enderman) {
-        return enderman.isScreaming();
     }
 
     @Override

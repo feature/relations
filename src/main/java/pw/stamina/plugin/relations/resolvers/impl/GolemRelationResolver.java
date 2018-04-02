@@ -11,24 +11,25 @@ import pw.stamina.plugin.relations.result.ResolutionCallback;
 import static pw.stamina.plugin.relations.result.ResolutionCallback.success;
 
 //TODO: Javadoc
-final class GolemRelationResolver
-        extends AbstractRelationResolver {
+final class GolemRelationResolver extends AbstractRelationResolver {
 
     @Override
     public ResolutionCallback resolveRelation(ResolveRequest request) {
         Golem golem = (Golem) request.entity();
 
         if (golem instanceof IronGolem) {
-            IronGolem ironGolem = (IronGolem) golem;
-
-            if (isIronGolemPassive(ironGolem)) {
-                return success(Relation.PASSIVE);
-            } else {
-                return success(Relation.NEUTRAL);
-            }
+            return resolveIronGolemRelation((IronGolem) golem);
         }
 
         return success(Relation.PASSIVE);
+    }
+
+    private ResolutionCallback resolveIronGolemRelation(IronGolem ironGolem) {
+        if (isIronGolemPassive(ironGolem)) {
+            return success(Relation.PASSIVE);
+        } else {
+            return success(Relation.NEUTRAL);
+        }
     }
 
     private boolean isIronGolemPassive(IronGolem ironGolem) {

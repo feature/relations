@@ -14,8 +14,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 //TODO: Javadoc
-public final class CopyOnWriteRelationManager
-        implements RelationManager {
+public final class CopyOnWriteRelationManager implements RelationManager {
 
     private final CopyOnWriteArrayList<RelationResolver> resolvers;
     private final CopyOnWriteArrayList<ResolvedRelationProcessor> processors;

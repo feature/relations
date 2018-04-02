@@ -1,7 +1,5 @@
 package pw.stamina.plugin.relations.resolvers.impl;
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
 import pw.stamina.minecraftapi.entity.Entity;
 import pw.stamina.minecraftapi.entity.animal.Tamable;
 import pw.stamina.minecraftapi.entity.animal.Wolf;
@@ -11,12 +9,15 @@ import pw.stamina.plugin.relations.request.ResolveRequest;
 import pw.stamina.plugin.relations.resolvers.AbstractRelationResolver;
 import pw.stamina.plugin.relations.result.ResolutionCallback;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 import static pw.stamina.plugin.relations.result.ResolutionCallback.nestedResolve;
 import static pw.stamina.plugin.relations.result.ResolutionCallback.success;
 
 //TODO: Javadoc
-final class TamableRelationResolver
-        extends AbstractRelationResolver {
+final class TamableRelationResolver extends AbstractRelationResolver {
+
     private final Provider<Player> localPlayerProvider;
 
     @Inject
@@ -67,7 +68,7 @@ final class TamableRelationResolver
         if (owner != null) {
             return nestedResolve(owner);
         } else {
-            //TODO: Integrate in documentation
+            //TODO: Include in documentation
             //Tamed wolfes are never angry, therefore their
             // hostility state cannot be determined, and should
             // be treated as hostile.

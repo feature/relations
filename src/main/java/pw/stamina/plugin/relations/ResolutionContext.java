@@ -19,8 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @implSpec this class is instance controlled using the {@link #getInstance(String)} method
  */
 public final class ResolutionContext {
-    private static final Map<String, ResolutionContext>
-            INSTANCES = new ConcurrentHashMap<>();
+    private static final Map<String, ResolutionContext> INSTANCES = new ConcurrentHashMap<>();
 
     /**
      * The {@link Relation} is requested in

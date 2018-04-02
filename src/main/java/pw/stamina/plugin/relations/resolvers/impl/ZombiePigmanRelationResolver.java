@@ -10,22 +10,17 @@ import pw.stamina.plugin.relations.result.ResolutionCallback;
 import static pw.stamina.plugin.relations.result.ResolutionCallback.success;
 
 //TODO: Javadoc
-final class ZombiePigmanRelationResolver
-        extends AbstractRelationResolver {
+final class ZombiePigmanRelationResolver extends AbstractRelationResolver {
 
     @Override
     public ResolutionCallback resolveRelation(ResolveRequest request) {
         ZombiePigman pigman = (ZombiePigman) request.entity();
 
-        if (isZombiePigmanHostile(pigman)) {
+        if (pigman.isAngry()) {
             return success(Relation.HOSTILE);
         } else {
             return success(Relation.NEUTRAL);
         }
-    }
-
-    private boolean isZombiePigmanHostile(ZombiePigman pigman) {
-        return pigman.isAngry();
     }
 
     @Override

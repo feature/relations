@@ -1,7 +1,5 @@
 package pw.stamina.plugin.relations.resolvers.impl;
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
 import pw.stamina.minecraftapi.entity.Entity;
 import pw.stamina.minecraftapi.entity.living.Player;
 import pw.stamina.plugin.relations.Relation;
@@ -9,15 +7,18 @@ import pw.stamina.plugin.relations.request.ResolveRequest;
 import pw.stamina.plugin.relations.resolvers.AbstractRelationResolver;
 import pw.stamina.plugin.relations.result.ResolutionCallback;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 import static pw.stamina.plugin.relations.result.ResolutionCallback.success;
 
 //TODO: Javadoc
-final class PlayerRelationResolver
-        extends AbstractRelationResolver {
+final class PlayerRelationResolver extends AbstractRelationResolver {
+
     private final Provider<Player> localPlayerProvider;
 
     @Inject
-    public PlayerRelationResolver(Provider<Player> localPlayerProvider) {
+    PlayerRelationResolver(Provider<Player> localPlayerProvider) {
         this.localPlayerProvider = localPlayerProvider;
     }
 
@@ -34,6 +35,7 @@ final class PlayerRelationResolver
 
     private boolean isLocalPlayer(Player player) {
         Player localPlayer = localPlayerProvider.get();
+
         return player == localPlayer;
     }
 

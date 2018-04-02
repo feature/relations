@@ -4,9 +4,8 @@ import java.util.Comparator;
 
 //TODO: Javadoc
 public abstract class AbstractRelationResolver implements RelationResolver {
-    private static final Comparator<RelationResolver>
-            PRIORITY_COMPARING_RELATION_RESOLVER_COMPARATOR
-            = Comparator.comparing(RelationResolver::getPriority);
+    private static final Comparator<RelationResolver> PRIORITY_COMPARING_RELATION_RESOLVER_COMPARATOR =
+            Comparator.comparing(RelationResolver::getPriority);
 
     @Override
     public final int compareTo(RelationResolver o) {

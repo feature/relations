@@ -10,8 +10,7 @@ import pw.stamina.plugin.relations.result.ResolutionCallback;
 import static pw.stamina.plugin.relations.result.ResolutionCallback.success;
 
 //TODO: Javadoc
-final class AnimalWildcardRelationResolver
-        extends WildcardRelationResolver {
+public final class AnimalWildcardRelationResolver extends WildcardRelationResolver {
 
     @Override
     public ResolutionCallback resolveRelation(ResolveRequest request) {
