@@ -1,0 +1,9 @@
+version '1.0.0-SNAPSHOT'
+
+ext {
+    guice_version = '4.1.0'
+}
+
+dependencies {
+    implementation "com.google.inject.extensions:guice-multibindings:$guice_version"
+}

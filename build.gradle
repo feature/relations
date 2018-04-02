@@ -1,44 +1,39 @@
-group 'pw.stamina.plugins'
 version '1.0.0-SNAPSHOT'
 
-apply plugin: 'java-library'
+allprojects {
+    apply plugin: 'java-library'
+    group 'pw.stamina.plugins'
 
-tasks.withType(JavaCompile) {
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
-    options.encoding = 'UTF-8'
-}
+    tasks.withType(JavaCompile) {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+        options.encoding = 'UTF-8'
+    }
 
-ext {
-    junit_platform_version = '1.1.0'
-    junit_jupiter_version = '5.1.0'
+    ext {
+        junit_platform_version = '1.1.0'
+        junit_jupiter_version = '5.1.0'
 
-    mockito_version = '2.17.0'
-}
+        mockito_version = '2.17.0'
+    }
 
-repositories {
-    mavenCentral()
-    mavenLocal()
-}
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
 
-dependencies {
-    implementation 'pw.stamina.minecraftapi:minecraft-api:1.0.0-SNAPSHOT'
+    dependencies {
+        implementation 'pw.stamina.minecraftapi:minecraft-api:1.0.0-SNAPSHOT'
 
-    api 'javax.inject:javax.inject:1'
+        api 'javax.inject:javax.inject:1'
 
-    testImplementation "org.junit.platform:junit-platform-runner:$junit_platform_version"
-    testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_jupiter_version"
-    runtimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit_jupiter_version"
+        testImplementation "org.junit.platform:junit-platform-runner:$junit_platform_version"
+        testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_jupiter_version"
+        runtimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit_jupiter_version"
 
-    testImplementation "org.mockito:mockito-core:$mockito_version"
+        testImplementation "org.mockito:mockito-core:$mockito_version"
 
-    /*
-    <dependency>
-        <groupId>com.google.inject.extensions</groupId>
-        <artifactId>guice-multibindings</artifactId>
-        <version>4.1.0</version>
-    </dependency>
-
+        /*
     <dependency>
         <groupId>org.hamcrest</groupId>
         <artifactId>hamcrest-all</artifactId>
@@ -46,6 +41,14 @@ dependencies {
         <scope>test</scope>
     </dependency>
     */
+    }
+}
+
+subprojects {
+
+    dependencies {
+        implementation rootProject
+    }
 }
 
 /*
