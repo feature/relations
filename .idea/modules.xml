@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/relations.iml" filepath="$PROJECT_DIR$/relations.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/relations_main.iml" filepath="$PROJECT_DIR$/.idea/modules/relations_main.iml" group="relations" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/relations_test.iml" filepath="$PROJECT_DIR$/.idea/modules/relations_test.iml" group="relations" />
     </modules>
   </component>
 </project>
