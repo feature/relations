@@ -5,7 +5,7 @@ ext {
 }
 
 dependencies {
-    implementation project(':relations-core')
+    api project(':relations-core')
 
-    implementation "com.google.inject.extensions:guice-multibindings:$guice_version"
+    api "com.google.inject.extensions:guice-multibindings:$guice_version"
 }

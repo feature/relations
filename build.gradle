@@ -23,7 +23,7 @@ subprojects {
     }
 
     dependencies {
-        implementation 'pw.stamina.minecraftapi:minecraft-api:1.0.0-SNAPSHOT'
+        api 'pw.stamina.minecraftapi:minecraft-api:1.0.0-SNAPSHOT'
 
         api 'javax.inject:javax.inject:1'
 
