@@ -1,8 +1,10 @@
-version '1.0.0-SNAPSHOT'
+version = '1.0.0-SNAPSHOT'
+
+apply plugin: 'maven'
 
 allprojects {
     apply plugin: 'java-library'
-    group 'pw.stamina.plugins'
+    group = 'pw.stamina.plugins'
 
     tasks.withType(JavaCompile) {
         sourceCompatibility = 1.8
