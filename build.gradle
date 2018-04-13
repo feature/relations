@@ -1,10 +1,10 @@
 version = '1.0.0-SNAPSHOT'
 
-apply plugin: 'maven'
-
 allprojects {
     apply plugin: 'java-library'
-    group = 'pw.stamina.plugins'
+    apply plugin: 'maven'
+
+    group = 'pw.stamina.plugins.relations'
 
     tasks.withType(JavaCompile) {
         sourceCompatibility = 1.8
@@ -43,13 +43,6 @@ allprojects {
         <scope>test</scope>
     </dependency>
     */
-    }
-}
-
-subprojects {
-
-    dependencies {
-        implementation rootProject
     }
 }
 

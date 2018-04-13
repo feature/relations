@@ -4,7 +4,7 @@ import pw.stamina.plugins.relations.resolvers.AbstractRelationResolver;
 import pw.stamina.plugins.relations.resolvers.Priority;
 
 //TODO: Javadoc
-abstract class WildcardRelationResolver extends AbstractRelationResolver {
+public abstract class WildcardRelationResolver extends AbstractRelationResolver {
 
     @Override
     public final Priority getPriority() {
