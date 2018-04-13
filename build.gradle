@@ -1,6 +1,4 @@
-version = '1.0.0-SNAPSHOT'
-
-allprojects {
+subprojects {
     apply plugin: 'java-library'
     apply plugin: 'maven'
 
