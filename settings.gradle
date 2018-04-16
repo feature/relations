@@ -1,5 +1,1 @@
 rootProject.name = 'relations'
-
-include 'relations-guice'
-include 'relations-core'
-
