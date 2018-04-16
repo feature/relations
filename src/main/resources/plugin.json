@@ -1,8 +1,0 @@
-{
-  "descriptor": {
-    "groupId": "${project.groupId}",
-    "artifactId": "${project.artifactId}",
-    "version": "${project.version}",
-    "name": "${project.name}"
-  }
-}
